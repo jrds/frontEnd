@@ -3,6 +3,7 @@ import './App.css';
 import { Component } from 'react';
 import Navbar from './components/Navbar';
 import {BrowserRouter as Router, Switch, Route} from 'react-router-dom';
+import Home from "./components/pages/Home";
 
 class App extends Component {
 
@@ -89,7 +90,7 @@ class App extends Component {
       <Router>
         <Navbar />
           <Switch>
-            <Route path='/' exact/>
+            <Route path='/' exact component = {Home}/>
           </Switch>
       </Router>
     </>
