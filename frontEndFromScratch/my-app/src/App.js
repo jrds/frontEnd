@@ -16,7 +16,8 @@ class App extends Component {
       loginError: "",
       userId: "",
       lessonId: "",
-      role: "LEARNER" //TODO remove hardcoding - and get this info from the server.
+      role:"",
+      lessonState: "NOT_STARTED"
     };
   }
 
@@ -40,7 +41,7 @@ class App extends Component {
       else
       {        
         console.log("Login: connect successful - sending session start.");
-        ws.send(JSON.stringify({id:0, from:this.state.userId, _type:"sessionStart"}));
+        ws.send(JSON.stringify({id:0, from:this.state.userId, _type:"SessionStartMessage"}));
       }
       console.log("connected websocket main component");
 
@@ -54,10 +55,13 @@ class App extends Component {
     ws.onmessage = e => {
       console.log(e.data);
       var msg = JSON.parse(e.data);
-      if (msg.id === 0 && msg._type === "success")
+      if (msg.id === 0 && msg._type === "SessionStartResponseMessage")
       {
         console.log("Login: success response received")
-        this.setState({loginError:"", loggedIn:true})
+        this.setState({
+          loginError:"", 
+          loggedIn:true,
+          role: msg.role})
       }
       else
       {
