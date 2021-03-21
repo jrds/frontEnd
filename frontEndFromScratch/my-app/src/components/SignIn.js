@@ -7,7 +7,7 @@ export default class SignIn extends Component {
 
         this.onChangeId = this.onChangeId.bind(this);
         this.onChangePassword = this.onChangePassword.bind(this);
-        //this.lessonId = this.onChangeLessonId.bind(this);
+        //this.lessonId = this.onChangeLessonId.bind(this); //TODO remove hard coding if time
         this.onSubmit = this.onSubmit.bind(this);
 
         this.state = {
@@ -15,9 +15,6 @@ export default class SignIn extends Component {
             password: '',
             lessonId: '2905',
         }
-
-
-          
     }
 
     onChangeId(e) {
@@ -34,13 +31,6 @@ export default class SignIn extends Component {
 
     onSubmit(e) {
         e.preventDefault();
-    
-        // const reqBody= {
-        //     id : this.state.id,
-        //     password: this.state.password,
-        // }
-        
-        //const url = 'ws://localhost:8080/' + this.state.lessonId;
         this.props.connect(this.state.id, this.state.password, this.state.lessonId);
         
 
@@ -74,10 +64,10 @@ export default class SignIn extends Component {
                     <label>{this.props.loginError}</label>
                     <br />
                     <div className="form-group">
-                        <input type="submit" value="Connect to"/>
+                        <input type="submit" value="Connect to Lesson"/>
                     </div>
                 </form>
             </div>
         )
-    };
+    }
 }

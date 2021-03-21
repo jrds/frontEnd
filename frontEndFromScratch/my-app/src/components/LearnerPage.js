@@ -1,14 +1,14 @@
 import React, { Component } from 'react';
 import {Container, Row, Col} from 'react-bootstrap';
 
-class LessonPage extends Component {
+class LearnerPage extends Component {
 
   render() {
     return (
       <Container>
         <Row>
           <Col>
-            <h1>Welcome to the lesson</h1>
+            <h1>Welcome to the lesson LEARNER</h1>
           </Col>
         </Row>
       </Container>
@@ -16,4 +16,4 @@ class LessonPage extends Component {
   }
 }
 
-export default LessonPage;
+export default LearnerPage;
