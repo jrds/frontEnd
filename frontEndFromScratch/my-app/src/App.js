@@ -17,7 +17,9 @@ class App extends Component {
       userId: "",
       lessonId: "",
       role:"",
-      lessonState: "NOT_STARTED"
+      lessonState: "NOT_STARTED",
+      openHelpRequest: false,
+      instructions: []
     };
   }
 
@@ -55,14 +57,34 @@ class App extends Component {
     ws.onmessage = e => {
       console.log(e.data);
       var msg = JSON.parse(e.data);
+      // msg id 0 ALWAYS = SessionStartMessage
       if (msg.id === 0 && msg._type === "SessionStartResponseMessage")
       {
         console.log("Login: success response received")
         this.setState({
           loginError:"", 
           loggedIn:true,
-          role: msg.role})
+          role: msg.role,
+          lessonState: msg.lessonState})
+        console.log(this.state)
       }
+      else if (msg._type === "LearnerLessonStateMessage")
+      {
+          console.log("update to state message received")
+          this.setState({
+            openHelpRequest: msg.openHelpRequestForThisLearner,
+            lessonState: msg.activeLessonState
+          })
+      }
+      // msg id 1 ALWAYS = StartLessonMessage from educator
+      else if (msg.id === 1)
+      {
+          console.log("Start lesson success message received")
+          this.setState({
+            lessonState: "IN_PROGRESS"
+          })
+      }
+      //else if (msg._type === "")
       else
       {
         console.log("Login: failure response received")
@@ -94,18 +116,17 @@ class App extends Component {
   };
 
   sendRequest = request => {
-    const { ws } = this.state;
-    
+    const { ws } = this.state; 
   }
 
   render() {
     if (this.state.loggedIn)
     {
       if(this.state.role === "LEARNER") {
-        return (<LearnerPage/>);
+        return (<LearnerPage lessonState={this.state.lessonState}/>);
       }
       else if (this.state.role === "EDUCATOR"){
-        return (<EducatorPage/>);
+        return (<EducatorPage ws={this.state.ws} userId={this.state.userId} lessonState={this.state.lessonState}/>);
       }
     }
     else
