@@ -73,7 +73,8 @@ class App extends Component {
           console.log("update to state message received")
           this.setState({
             openHelpRequest: msg.openHelpRequestForThisLearner,
-            lessonState: msg.activeLessonState
+            lessonState: msg.activeLessonState,
+            instructions: msg.instructionsSent
           })
       }
       // msg id 1 ALWAYS = StartLessonMessage from educator
@@ -84,7 +85,10 @@ class App extends Component {
             lessonState: "IN_PROGRESS"
           })
       }
-      //else if (msg._type === "")
+      else if (msg._type === "InstructionMessage"){
+          console.log("Instruction received")
+          this.setState({instructions: [...this.state.instructions, msg.instruction]});
+     }
       else
       {
         console.log("Login: failure response received")
@@ -123,7 +127,7 @@ class App extends Component {
     if (this.state.loggedIn)
     {
       if(this.state.role === "LEARNER") {
-        return (<LearnerPage lessonState={this.state.lessonState}/>);
+        return (<LearnerPage lessonState={this.state.lessonState} instructions={this.state.instructions}/>);
       }
       else if (this.state.role === "EDUCATOR"){
         return (<EducatorPage ws={this.state.ws} userId={this.state.userId} lessonState={this.state.lessonState}/>);
