@@ -21,7 +21,9 @@ class App extends Component {
       lessonState: "NOT_STARTED",
       openHelpRequest: false,
       instructions: [],
-      chatMessages: []
+      chatMessages: [],
+      code: "" 
+
     };
   }
 
@@ -102,7 +104,7 @@ class App extends Component {
                                                           
           }]})
           // ************************************************************************** TODO **************************************************************************
-          // need to write logic for managing the to and from, moreSo for Educator, maybe time stamp them too - need to write a js component representing a message and then create a new obj here. 
+          // need to write logic for managing the to and from, moreSo for Educator, maybe time stamp them too? - 
       }
       else if(msg._type === "FailureMessage"){
           console.log("Failure Message received")
@@ -145,11 +147,30 @@ class App extends Component {
     const { ws } = this.state; 
   }
 
+
+  setCode = (code) => {
+    this.setState({
+      code: code
+    });
+    console.log(code);
+  }
+
+
+
   render() {
     if (this.state.loggedIn)
     {
       if(this.state.role === "LEARNER") {
-        return (<LearnerPage lessonState={this.state.lessonState} instructions={this.state.instructions} educatorId={this.state.educatorId} userId = {this.state.userId} ws={this.state.ws} chatMessages = {this.state.chatMessages}/>);
+        return (<LearnerPage 
+            lessonState={this.state.lessonState} 
+            instructions={this.state.instructions} 
+            educatorId={this.state.educatorId} 
+            userId = {this.state.userId} 
+            ws={this.state.ws} 
+            chatMessages = {this.state.chatMessages}
+            code = {this.state.code}
+            setCode = {this.setCode}
+            />);
       }
       else if (this.state.role === "EDUCATOR"){
         return (<EducatorPage ws={this.state.ws} userId={this.state.userId} lessonState={this.state.lessonState} chatMessages = {this.state.chatMessages}/>);

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {Container, Row, Col} from 'react-bootstrap';
 import Image from 'react-bootstrap/Image';
 import Spinner from 'react-bootstrap/Spinner';  
@@ -10,9 +10,7 @@ import MessageList from "../components/MessageList";
 
 function LearnerPage(props) {
 
-  const [code, setCode] = useState("")
     
-
     if (props.lessonState === "NOT_STARTED")
     {
       return (
@@ -50,20 +48,19 @@ function LearnerPage(props) {
                 <Editor 
                   language = "text/x-java" 
                   displayName = "Java"
-                  value={code} 
-                  onChange={setCode}
+                  value={props.code} 
+                  onChange={props.setCode}
                 />
                 </div>
               </Row>
               <Row>
-                <div>
-                  <iframe 
-                    title="output"
-                    sandbox="allow-scripts"
-                    frameBorder="0"
-                    width="50%"
-                    height="30%"
-                  />
+                  <button onClick = {handleClick}>
+                  Run Code
+                  </button>
+              </Row>
+              <Row>
+                <div className = "code-output">
+                  
                 </div>
               </Row>
             </Col>
@@ -80,6 +77,18 @@ function LearnerPage(props) {
 
     }
 }
+
+
+function handleClick(){
+  /* this.props.ws.send(JSON.stringify({
+      id:1, 
+      from:this.props.userId, 
+      _type:"LessonStartMessage"}
+  )) */
+  console.log("Run Codeutton Pressed");
+}
+
+
 
 
 export default LearnerPage;

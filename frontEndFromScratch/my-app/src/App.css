@@ -51,3 +51,13 @@
   color: #fff;
   font-size: 100px;
 }
+
+.top-pane {
+  width: 100%;
+}
+
+.code-output {
+  width: 100%;
+  height: 200px;
+  background-color: aquamarine;
+  }
