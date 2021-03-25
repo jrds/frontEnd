@@ -1,9 +1,12 @@
-import React, { Component, useState } from 'react';
+import React, { useState } from 'react';
 import {Container, Row, Col} from 'react-bootstrap';
 import Image from 'react-bootstrap/Image';
 import Spinner from 'react-bootstrap/Spinner';  
 import Editor from "../components/Editor";
 import Instruction from "./Instruction";
+import SendMessageForm from "../components/SendMessageForm";
+import ChatToggleAndHeader from "../components/ChatToggleAndHeader";
+import MessageList from "../components/MessageList";
 
 function LearnerPage(props) {
 
@@ -63,6 +66,13 @@ function LearnerPage(props) {
                   />
                 </div>
               </Row>
+            </Col>
+            <Col>
+            <div className="message pane">
+                <ChatToggleAndHeader/>
+                <MessageList chatMessages = {props.chatMessages}/>
+                <SendMessageForm ws = {props.ws} educatorId={props.educatorId} userId = {props.userId} chatMessages = {props.chatMessages}/>
+              </div>
             </Col>
           </Row>
       </Container>

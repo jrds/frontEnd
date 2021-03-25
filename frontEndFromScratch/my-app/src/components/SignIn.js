@@ -32,8 +32,6 @@ export default class SignIn extends Component {
     onSubmit(e) {
         e.preventDefault();
         this.props.connect(this.state.id, this.state.password, this.state.lessonId);
-        
-
     }   
 
 

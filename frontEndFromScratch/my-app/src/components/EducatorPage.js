@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import {Container, Row, Col} from 'react-bootstrap';
 import LessonPlan from './LessonPlan';
+import MessageList from './MessageList';
 import StartNextLesson from './StartNextLesson';
 
 class EducatorPage extends Component {
@@ -25,7 +26,19 @@ class EducatorPage extends Component {
     }
     else
     {
-      return <h1>A STARTED LESSON</h1>
+      return (
+        <Container>
+          <Row>
+            <Col>
+              <h1>A STARTED LESSON</h1>
+            </Col>
+            <Col>
+              <MessageList chatMessages = {this.props.chatMessages}/>
+            </Col>
+          </Row>
+        </Container>
+
+      )
     }
   }
 }

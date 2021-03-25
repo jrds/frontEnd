@@ -16,10 +16,12 @@ class App extends Component {
       loginError: "",
       userId: "",
       lessonId: "",
+      educatorId: "",
       role:"",
       lessonState: "NOT_STARTED",
       openHelpRequest: false,
-      instructions: []
+      instructions: [],
+      chatMessages: []
     };
   }
 
@@ -74,7 +76,8 @@ class App extends Component {
           this.setState({
             openHelpRequest: msg.openHelpRequestForThisLearner,
             lessonState: msg.activeLessonState,
-            instructions: msg.instructionsSent
+            instructions: msg.instructionsSent,
+            educatorId: msg.educatorId
           })
       }
       // msg id 1 ALWAYS = StartLessonMessage from educator
@@ -89,6 +92,25 @@ class App extends Component {
           console.log("Instruction received")
           this.setState({instructions: [...this.state.instructions, msg.instruction]});
      }
+      else if (msg._type === "ChatMessage"){
+          console.log ("Chat Message received")
+          this.setState({ 
+            chatMessages: [...this.state.chatMessages, {
+                                                          text: msg.text,
+                                                          senderId: msg.from,
+                                                          id:  msg.id
+                                                          
+          }]})
+          // ************************************************************************** TODO **************************************************************************
+          // need to write logic for managing the to and from, moreSo for Educator, maybe time stamp them too - need to write a js component representing a message and then create a new obj here. 
+      }
+      else if(msg._type === "FailureMessage"){
+          console.log("Failure Message received")
+          console.log(msg.failureReason)
+      }
+      else if(msg._type === "SuccessMessage"){
+          console.log("Success Meassage Recieved for message id: " + msg.id)
+      }
       else
       {
         console.log("Login: failure response received")
@@ -127,10 +149,10 @@ class App extends Component {
     if (this.state.loggedIn)
     {
       if(this.state.role === "LEARNER") {
-        return (<LearnerPage lessonState={this.state.lessonState} instructions={this.state.instructions}/>);
+        return (<LearnerPage lessonState={this.state.lessonState} instructions={this.state.instructions} educatorId={this.state.educatorId} userId = {this.state.userId} ws={this.state.ws} chatMessages = {this.state.chatMessages}/>);
       }
       else if (this.state.role === "EDUCATOR"){
-        return (<EducatorPage ws={this.state.ws} userId={this.state.userId} lessonState={this.state.lessonState}/>);
+        return (<EducatorPage ws={this.state.ws} userId={this.state.userId} lessonState={this.state.lessonState} chatMessages = {this.state.chatMessages}/>);
       }
     }
     else
