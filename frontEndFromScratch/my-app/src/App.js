@@ -12,17 +12,28 @@ class App extends Component {
 
     this.state = {
       ws: null,
-      loggedIn: false,
-      loginError: "",
-      userId: "",
       lessonId: "",
       educatorId: "",
       role:"",
       lessonState: "NOT_STARTED",
-      openHelpRequest: false,
+      
+      loggedIn: false,
+      loginError: "",
+      userId: "",
+
       instructions: [],
       chatMessages: [],
-      code: "" 
+      
+      openHelpRequest: false,
+      
+      code: "",
+      compiledCodeResult: "",
+      timeLastCompiled: "",
+      
+      sessionStartMsgId: 0,
+      lessonStartMsgId: 1,
+      messageCounter: 2,
+  
 
     };
   }
@@ -47,7 +58,7 @@ class App extends Component {
       else
       {        
         console.log("Login: connect successful - sending session start.");
-        ws.send(JSON.stringify({id:0, from:this.state.userId, _type:"SessionStartMessage"}));
+        ws.send(JSON.stringify({id:this.state.sessionStartMsgId, from:this.state.userId, _type:"SessionStartMessage"}));
       }
       console.log("connected websocket main component");
 
@@ -61,48 +72,53 @@ class App extends Component {
     ws.onmessage = e => {
       console.log(e.data);
       var msg = JSON.parse(e.data);
-      // msg id 0 ALWAYS = SessionStartMessage
-      if (msg.id === 0 && msg._type === "SessionStartResponseMessage")
+      
+      if (msg.id === this.state.sessionStartMsgId && msg._type === "SessionStartResponseMessage")
       {
         console.log("Login: success response received")
+       
         this.setState({
           loginError:"", 
           loggedIn:true,
           role: msg.role,
           lessonState: msg.lessonState})
-        console.log(this.state)
+       
+          console.log(this.state)
       }
+
       else if (msg._type === "LearnerLessonStateMessage")
       {
-          console.log("update to state message received")
-          this.setState({
-            openHelpRequest: msg.openHelpRequestForThisLearner,
-            lessonState: msg.activeLessonState,
-            instructions: msg.instructionsSent,
-            educatorId: msg.educatorId
-          })
+        console.log("update to state message received")
+        
+        this.setState({
+          openHelpRequest: msg.openHelpRequestForThisLearner,
+          lessonState: msg.activeLessonState,
+          instructions: msg.instructionsSent,
+          educatorId: msg.educatorId
+        })
       }
-      // msg id 1 ALWAYS = StartLessonMessage from educator
-      else if (msg.id === 1)
+
+      else if (msg.id === this.state.lessonStartMsgId)
       {
           console.log("Start lesson success message received")
+          
           this.setState({
             lessonState: "IN_PROGRESS"
           })
       }
+      
       else if (msg._type === "InstructionMessage"){
           console.log("Instruction received")
+          
           this.setState({instructions: [...this.state.instructions, msg.instruction]});
      }
+      
       else if (msg._type === "ChatMessage"){
           console.log ("Chat Message received")
+          
           this.setState({ 
-            chatMessages: [...this.state.chatMessages, {
-                                                          text: msg.text,
-                                                          senderId: msg.from,
-                                                          id:  msg.id
-                                                          
-          }]})
+            chatMessages: [...this.state.chatMessages, {text: msg.text, senderId: msg.from, id: msg.id, status:"Received"}]
+          })
           // ************************************************************************** TODO **************************************************************************
           // need to write logic for managing the to and from, moreSo for Educator, maybe time stamp them too? - 
       }
@@ -113,11 +129,20 @@ class App extends Component {
       else if(msg._type === "SuccessMessage"){
           console.log("Success Meassage Recieved for message id: " + msg.id)
       }
+      else if(msg._type === "CompiledCodeMessage"){
+        console.log("CompiledCodeMessage Recieved")
+        this.setState({
+          compiledCodeResult: msg.compilationResult,
+          timeLastCompiled: msg.timeCompiled
+        })
+
+      } 
       else
       {
         console.log("Login: failure response received")
         this.setState({loginError:msg.failureReason, loggedIn:false})
       }
+      
     }
 
 
@@ -143,9 +168,9 @@ class App extends Component {
     if (!ws || ws.readyState === WebSocket.CLOSED) this.connect(); //check if websocket instance is closed, if so call `connect` function.
   };
 
-  sendRequest = request => {
+/*   sendRequest = request => {
     const { ws } = this.state; 
-  }
+  } */
 
 
   setCode = (code) => {
@@ -153,6 +178,39 @@ class App extends Component {
       code: code
     });
     console.log(code);
+  }
+
+  sendLearnersChatMessage = (messageText) =>
+  { 
+    this.setState({ 
+      chatMessages: [...this.state.chatMessages, {text: messageText, senderId: this.state.userId, id: this.state.messageCounter, status:"Pending"}]                      
+    }) //TODO - want to add concept of time here, to be able to sort the messsages by time, and will be useful for the educator to see how long it's been since a message was last sent etc.
+            //  need to check if there's already an Instant or time being calculated on the back end, if so will just need to add to the chat message's variables. 
+    this.state.ws.send(JSON.stringify({
+      id: this.state.messageCounter, 
+      from:this.state.userId,
+      to:this.state.educatorId,
+      text: messageText, 
+      _type:"ChatMessage"}
+    ))
+    this.setState({messageCounter: (this.state.messageCounter + 1)})
+
+  }
+
+
+  sendCodeToCompileMessage = () =>
+  {
+
+    this.state.ws.send(JSON.stringify({
+      id: this.state.messageCounter,
+      from: this.state.userId,
+      codeToCompile: this.state.code, 
+      _type: "CodeToCompileMessage"
+    }))
+
+    this.setState({
+      messageCounter: (this.state.messageCounter + 1)
+    })
   }
 
 
@@ -170,10 +228,20 @@ class App extends Component {
             chatMessages = {this.state.chatMessages}
             code = {this.state.code}
             setCode = {this.setCode}
+            sendLearnersChatMessage = {this.sendLearnersChatMessage}
+            sendCodeToCompileMessage = {this.sendCodeToCompileMessage}
+            compiledCodeResult = {this.state.compiledCodeResult}
+            timeLastCompiled = {this.state.timeLastCompiled}
             />);
       }
       else if (this.state.role === "EDUCATOR"){
-        return (<EducatorPage ws={this.state.ws} userId={this.state.userId} lessonState={this.state.lessonState} chatMessages = {this.state.chatMessages}/>);
+        return (<EducatorPage  
+            ws={this.state.ws} 
+            userId={this.state.userId} 
+            lessonState={this.state.lessonState} 
+            chatMessages = {this.state.chatMessages}
+
+            />);
       }
     }
     else

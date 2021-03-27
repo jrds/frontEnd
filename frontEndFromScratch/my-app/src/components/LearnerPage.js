@@ -44,7 +44,7 @@ function LearnerPage(props) {
             </Col>
             <Col>
               <Row>
-                <div className="pane top-pane">
+                <div className="top-pane">
                 <Editor 
                   language = "text/x-java" 
                   displayName = "Java"
@@ -54,21 +54,25 @@ function LearnerPage(props) {
                 </div>
               </Row>
               <Row>
-                  <button onClick = {handleClick}>
+                  <button className = "run-code-button" onClick = {handleClick}>
                   Run Code
                   </button>
               </Row>
               <Row>
                 <div className = "code-output">
-                  
+                  <pre>
+                    {props.timeLastCompiled + "\n" + props.compiledCodeResult}
+                  </pre>  
                 </div>
               </Row>
             </Col>
             <Col>
-            <div className="message pane">
+            <div className="message-pane">
                 <ChatToggleAndHeader/>
-                <MessageList chatMessages = {props.chatMessages}/>
-                <SendMessageForm ws = {props.ws} educatorId={props.educatorId} userId = {props.userId} chatMessages = {props.chatMessages}/>
+                <MessageList chatMessages = {props.chatMessages}/> {// TODO - think about how to seperate out the learners own message from the educators - how it wil work with formating etc.
+                }
+                <SendMessageForm sendLearnersChatMessage = {props.sendLearnersChatMessage}
+/>
               </div>
             </Col>
           </Row>
@@ -76,19 +80,15 @@ function LearnerPage(props) {
       )
 
     }
-}
+
 
 
 function handleClick(){
-  /* this.props.ws.send(JSON.stringify({
-      id:1, 
-      from:this.props.userId, 
-      _type:"LessonStartMessage"}
-  )) */
-  console.log("Run Codeutton Pressed");
+  props.sendCodeToCompileMessage()
+  console.log("Run CodeButton Pressed");
 }
 
-
+}
 
 
 export default LearnerPage;

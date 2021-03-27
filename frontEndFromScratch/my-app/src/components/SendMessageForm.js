@@ -2,13 +2,11 @@ import React, { Component } from 'react'
 
 
 class SendMessageForm extends React.Component {
-    
-
+ 
     constructor(props) {
         super(props)
         this.state = {
           message: '',
-          messageCounter: 500
         }
         this.onChangeMessage = this.onChangeMessage.bind(this);
         this.onSubmit = this.onSubmit.bind(this);
@@ -22,17 +20,12 @@ class SendMessageForm extends React.Component {
 
   onSubmit(e) {
       e.preventDefault();
-      this.props.ws.send(JSON.stringify({
-        id: this.state.messageCounter, 
-        from:this.props.userId,
-        to:this.props.educatorId,
-        text:this.state.message, 
-        _type:"ChatMessage"}
-      ))
+      this.props.sendLearnersChatMessage(this.state.message)
+
       this.setState({
         message: '',
-        messageCounter: this.state.messageCounter + 1
       })
+
     console.log("ChatMessage Pressed")
   }   
 
