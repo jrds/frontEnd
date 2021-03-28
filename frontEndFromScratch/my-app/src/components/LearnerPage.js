@@ -7,6 +7,7 @@ import Instruction from "./Instruction";
 import SendMessageForm from "../components/SendMessageForm";
 import ChatToggleAndHeader from "../components/ChatToggleAndHeader";
 import MessageList from "../components/MessageList";
+import CodeConsole from "./CodeConsole";
 
 function LearnerPage(props) {
 
@@ -57,13 +58,10 @@ function LearnerPage(props) {
                   <button className = "run-code-button" onClick = {handleClick}>
                   Run Code
                   </button>
+                  {/* TODO show last event time */}
               </Row>
               <Row>
-                <div className = "code-output">
-                  <pre>
-                    {props.timeLastCompiled + "\n" + props.compiledCodeResult}
-                  </pre>  
-                </div>
+                <CodeConsole consoleStrings={props.consoleStrings} sendExecutionInput={props.sendExecutionInput} />
               </Row>
             </Col>
             <Col>

@@ -21,11 +21,12 @@ class StartNextLesson extends Component {
             </div>
     )}
 
+    //TODO - move to App
     handleClick(){
         this.props.ws.send(JSON.stringify({
             id:1, 
             from:this.props.userId, 
-            _type:"LessonStartMessage"}
+            _type:"LessonStartRequest"}
         ))
         console.log("Button Pressed")
 }

@@ -27,7 +27,7 @@ class App extends Component {
       openHelpRequest: false,
       
       code: "",
-      compiledCodeResult: "",
+      consoleStrings: [],
       timeLastCompiled: "",
       
       sessionStartMsgId: 0,
@@ -58,7 +58,7 @@ class App extends Component {
       else
       {        
         console.log("Login: connect successful - sending session start.");
-        ws.send(JSON.stringify({id:this.state.sessionStartMsgId, from:this.state.userId, _type:"SessionStartMessage"}));
+        ws.send(JSON.stringify({id:this.state.sessionStartMsgId, from:this.state.userId, _type:"SessionStartRequest"}));
       }
       console.log("connected websocket main component");
 
@@ -73,7 +73,7 @@ class App extends Component {
       console.log(e.data);
       var msg = JSON.parse(e.data);
       
-      if (msg.id === this.state.sessionStartMsgId && msg._type === "SessionStartResponseMessage")
+      if (msg.id === this.state.sessionStartMsgId && msg._type === "SessionStartResponse")
       {
         console.log("Login: success response received")
        
@@ -86,7 +86,7 @@ class App extends Component {
           console.log(this.state)
       }
 
-      else if (msg._type === "LearnerLessonStateMessage")
+      else if (msg._type === "LearnerLessonStateInfo")
       {
         console.log("update to state message received")
         
@@ -107,7 +107,7 @@ class App extends Component {
           })
       }
       
-      else if (msg._type === "InstructionMessage"){
+      else if (msg._type === "InstructionInfo"){
           console.log("Instruction received")
           
           this.setState({instructions: [...this.state.instructions, msg.instruction]});
@@ -122,18 +122,27 @@ class App extends Component {
           // ************************************************************************** TODO **************************************************************************
           // need to write logic for managing the to and from, moreSo for Educator, maybe time stamp them too? - 
       }
-      else if(msg._type === "FailureMessage"){
-          console.log("Failure Message received")
+      else if(msg._type === "FailureResponse"){
+          console.log("Failure Response received")
           console.log(msg.failureReason)
       }
-      else if(msg._type === "SuccessMessage"){
-          console.log("Success Meassage Recieved for message id: " + msg.id)
+      else if(msg._type === "SuccessResponse"){
+          console.log("Success Response Recieved for message id: " + msg.id)
       }
-      else if(msg._type === "CompiledCodeMessage"){
-        console.log("CompiledCodeMessage Recieved")
+      else if(msg._type === "CodeExecutionInfo"){
+        console.log("CodeExecutionInfo Recieved")
+        var newStrings = [];
+        if (msg.executionErrorOutput !== "")
+        {
+          newStrings.push( {type:'stderr', text:msg.executionErrorOutput})
+        }
+        if (msg.executionOutput !== "")
+        {
+          newStrings.push( {type:'stdout', text:msg.executionOutput})
+        }
         this.setState({
-          compiledCodeResult: msg.compilationResult,
-          timeLastCompiled: msg.timeCompiled
+          consoleStrings: [...this.state.consoleStrings, ...newStrings],
+          timeLastCompiled: msg.executionEventTime
         })
 
       } 
@@ -197,19 +206,30 @@ class App extends Component {
 
   }
 
+  sendExecutionInput = (input) => {
+    this.state.ws.send(JSON.stringify({
+      id: this.state.messageCounter,
+      from: this.state.userId,
+      input: input, 
+      _type: "CodeExecutionInputRequest"
+    }))
+  }
 
   sendCodeToCompileMessage = () =>
   {
+    this.setState({
+      consoleStrings: []      
+    })
 
     this.state.ws.send(JSON.stringify({
       id: this.state.messageCounter,
       from: this.state.userId,
-      codeToCompile: this.state.code, 
-      _type: "CodeToCompileMessage"
+      codeToExecute: this.state.code, 
+      _type: "ExecuteCodeRequest"
     }))
 
     this.setState({
-      messageCounter: (this.state.messageCounter + 1)
+      messageCounter: (this.state.messageCounter + 1)      
     })
   }
 
@@ -230,7 +250,8 @@ class App extends Component {
             setCode = {this.setCode}
             sendLearnersChatMessage = {this.sendLearnersChatMessage}
             sendCodeToCompileMessage = {this.sendCodeToCompileMessage}
-            compiledCodeResult = {this.state.compiledCodeResult}
+            sendExecutionInput = {this.sendExecutionInput}
+            consoleStrings = {this.state.consoleStrings}
             timeLastCompiled = {this.state.timeLastCompiled}
             />);
       }
