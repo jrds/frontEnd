@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
-import {Container, Row, Col} from 'react-bootstrap';
+import {Container, Row, Col } from 'react-bootstrap';
 import LessonPlan from './LessonPlan';
 import MessageList from './MessageList';
 import StartNextLesson from './StartNextLesson';
+import LearnerGrid from './LearnerGrid';
 
 class EducatorPage extends Component {
 
-  
+
 
   render() {
     if (this.props.lessonState === "NOT_STARTED")
@@ -30,10 +31,14 @@ class EducatorPage extends Component {
         <Container>
           <Row>
             <Col>
-              <h1>A STARTED LESSON</h1>
+              {/* THE activeLearners is empty. dummy info in learnerGrid line is just a test to show if the cards are wokring //TODO */}
+              {console.log(this.props.activeLearners.size)} 
+              {console.log(this.props.activeLearners)}
+              <LearnerGrid activeLearners = {this.props.activeLearners}/>
             </Col>
             <Col>
               <MessageList chatMessages = {this.props.chatMessages}/>
+              <div> Will show help requests too!!</div>
             </Col>
           </Row>
         </Container>

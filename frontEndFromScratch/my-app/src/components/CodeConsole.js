@@ -1,16 +1,19 @@
 import React, { Component } from 'react';
+import autoscroll from 'autoscroll-react'
 
-export default class CodeConsole extends Component{
+
+class CodeConsole extends Component{
 
   constructor(props) {
     super(props);
     this.onChangeInput = this.onChangeInput.bind(this);
- 
+
     this.state = {
         input: '',
     }
   }
-  
+
+
   onChangeInput(e) {
       this.setState({
         input: e.target.value + "\n"
@@ -40,3 +43,5 @@ export default class CodeConsole extends Component{
         )
     }
 }
+
+export default autoscroll(CodeConsole)

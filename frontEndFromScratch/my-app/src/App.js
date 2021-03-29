@@ -16,6 +16,7 @@ class App extends Component {
       educatorId: "",
       role:"",
       lessonState: "NOT_STARTED",
+      activeLearners:[],
       
       loggedIn: false,
       loginError: "",
@@ -83,6 +84,11 @@ class App extends Component {
           role: msg.role,
           lessonState: msg.lessonState})
        
+        if (this.state.role === "LEARNER"){
+          this.setState({
+            activeLearners: [...this.state.activeLearners, {learnerId: msg.from, code: [], lastActive: "", messages: [], compiledCodeResponses: []}]
+          })
+        }
           console.log(this.state)
       }
 
@@ -213,6 +219,8 @@ class App extends Component {
       input: input, 
       _type: "CodeExecutionInputRequest"
     }))
+
+    this.setState({messageCounter: (this.state.messageCounter + 1)})
   }
 
   sendCodeToCompileMessage = () =>
@@ -233,7 +241,16 @@ class App extends Component {
     })
   }
 
+  sendTerminateExecutionRequest = () => {
 
+    this.state.ws.send(JSON.stringify({
+      id: this.state.messageCounter,
+      from: this.state.userId,
+      _type: "TerminateExecutionRequest"
+    }))
+
+    this.setState({messageCounter: (this.state.messageCounter + 1)})
+  }
 
   render() {
     if (this.state.loggedIn)
@@ -253,6 +270,7 @@ class App extends Component {
             sendExecutionInput = {this.sendExecutionInput}
             consoleStrings = {this.state.consoleStrings}
             timeLastCompiled = {this.state.timeLastCompiled}
+            sendTerminateExecutionRequest = {this.sendTerminateExecutionRequest}
             />);
       }
       else if (this.state.role === "EDUCATOR"){
@@ -261,7 +279,7 @@ class App extends Component {
             userId={this.state.userId} 
             lessonState={this.state.lessonState} 
             chatMessages = {this.state.chatMessages}
-
+            activeLearners = {this.state.activeLearners}
             />);
       }
     }

@@ -8,6 +8,7 @@ import SendMessageForm from "../components/SendMessageForm";
 import ChatToggleAndHeader from "../components/ChatToggleAndHeader";
 import MessageList from "../components/MessageList";
 import CodeConsole from "./CodeConsole";
+import Button from 'react-bootstrap/Button'
 
 function LearnerPage(props) {
 
@@ -54,11 +55,14 @@ function LearnerPage(props) {
                 />
                 </div>
               </Row>
-              <Row>
-                  <button className = "run-code-button" onClick = {handleClick}>
-                  Run Code
-                  </button>
-                  {/* TODO show last event time */}
+              <Row className = "code-button-row">
+                  <Button className = "run-code-button" variant="outline-success" onClick = {handleClick}>
+                      Run Code
+                  </Button>
+        {/* TODO show last event time */}
+                  <Button className = "stop-code-button" variant="outline-danger" onClick = {handleClick2}>
+                      Stop Code Execution
+                  </Button>
               </Row>
               <Row>
                 <CodeConsole consoleStrings={props.consoleStrings} sendExecutionInput={props.sendExecutionInput} />
@@ -67,7 +71,7 @@ function LearnerPage(props) {
             <Col>
             <div className="message-pane">
                 <ChatToggleAndHeader/>
-                <MessageList chatMessages = {props.chatMessages}/> {// TODO - think about how to seperate out the learners own message from the educators - how it wil work with formating etc.
+                <MessageList chatMessages = {props.chatMessages} userId = {props.userId}/> {// TODO - think about how to seperate out the learners own message from the educators - how it wil work with formating etc.
                 }
                 <SendMessageForm sendLearnersChatMessage = {props.sendLearnersChatMessage}
 />
@@ -83,7 +87,12 @@ function LearnerPage(props) {
 
 function handleClick(){
   props.sendCodeToCompileMessage()
-  console.log("Run CodeButton Pressed");
+  console.log("Run Code Button Pressed");
+}
+
+function handleClick2(){
+  props.sendTerminateExecutionRequest()
+  console.log("Stop Code Execution Pressed");
 }
 
 }

@@ -6,16 +6,32 @@ export class MessageList extends Component {
           return (
             <ul className="message-list">                 
               {this.props.chatMessages.map(message => {
-                return (
-                 <li key={message.id}>
-                   <div>
-                     {message.senderId}
-                   </div>
-                   <div>
-                     {message.text}
-                   </div>
-                 </li>
-               )
+
+                if (message.senderId === this.props.userId) {
+                  return (
+                    <li className = "message-from-me" key={message.id}>
+                      <div>
+                        Me:
+                      </div>
+                      <div>
+                        {message.text}
+                      </div>
+                    </li>
+                  )
+                } else {
+                  return (
+                    <div className = "message-from-other" key={message.id} style={{ float: 'right', marginRight: '18px', color: 'white', backgroundColor: '#3B2A50' }}>
+                      <div>
+                        {message.senderId + ":"}
+                      </div>
+                      <div>
+                        {message.text}
+                      </div>
+                    </div>
+                  )
+                }
+                
+                
              })}
            </ul>
           )
