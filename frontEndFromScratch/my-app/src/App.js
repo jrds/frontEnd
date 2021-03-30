@@ -33,8 +33,9 @@ class App extends Component {
       
       sessionStartMsgId: 0,
       lessonStartMsgId: 1,
-      messageCounter: 2,
-  
+      helpRequestMsgId: 3,
+      messageCounter: 4,
+
       dummyLearners: [{name: "Jordan", age:29}, {name: "BanBan", age:21}, {name: "Jack", age:29}]
 
     };
@@ -94,11 +95,16 @@ class App extends Component {
         console.log("update to state message received")
         
         this.setState({
-          openHelpRequest: msg.openHelpRequestForThisLearner,
           lessonState: msg.activeLessonState,
           instructions: msg.instructionsSent,
           educatorId: msg.educatorId
         })
+
+        if (msg.helpRequestStatus === "NEW" || msg.helpRequestStatus === "IN_P"){
+          this.setState({openHelpRequest: true})  
+        } else {
+          this.setState({openHelpRequest: false})
+        }
       }
 
       else if (msg.id === this.state.lessonStartMsgId)
@@ -249,6 +255,49 @@ class App extends Component {
     this.setState({messageCounter: (this.state.messageCounter + 1)})
   }
 
+  // Only learners can do this:
+  sendHelpRequest = () => {
+    this.state.ws.send(JSON.stringify({
+      id: this.state.helpRequestMsgId,
+      from: this.state.userId,
+      _type: "NewHelpRequest"
+    }))
+  }
+
+  sendLearnerCancelsHelpRequest = () => {
+    this.state.ws.send(JSON.stringify({
+      id: this.state.messageCounter,
+      leanerId: this.state.userId,
+      _type: "CancelHelpRequest"
+    }))
+
+    this.setState({messageCounter: (this.state.messageCounter + 1)})
+  }
+
+  sendEducatorCancelsHelpRequest = (learnerToCloseHelpReq) => {
+    this.state.ws.send(JSON.stringify({
+      id: this.state.messageCounter,
+      leanerId: learnerToCloseHelpReq,
+      _type: "CancelHelpRequest"
+    }))
+
+    this.setState({messageCounter: (this.state.messageCounter + 1)})
+  }
+
+  // only educators can do this:
+  sendUpdateHelpRequest = (learnerToUpdateHelpReq, status) => {
+    this.state.ws.send(JSON.stringify({
+      id: this.state.messageCounter,
+      from: this.state.userId,
+      leanerId: learnerToUpdateHelpReq,
+      status: status,
+      _type: "UpdateHelpStatusRequest"
+    }))
+
+    this.setState({messageCounter: (this.state.messageCounter + 1)})
+  }
+
+
   render() {
     if (this.state.loggedIn)
     {
@@ -268,6 +317,9 @@ class App extends Component {
             consoleStrings = {this.state.consoleStrings}
             timeLastCompiled = {this.state.timeLastCompiled}
             sendTerminateExecutionRequest = {this.sendTerminateExecutionRequest}
+            openHelpRequest = {this.state.openHelpRequest}
+            sendHelpRequest = {this.sendHelpRequest}
+            sendLearnerCancelsHelpRequest = {this.sendLearnerCancelsHelpRequest}
             />);
       }
       else if (this.state.role === "EDUCATOR"){

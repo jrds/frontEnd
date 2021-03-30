@@ -8,7 +8,8 @@ import SendMessageForm from "../components/SendMessageForm";
 import ChatToggleAndHeader from "../components/ChatToggleAndHeader";
 import MessageList from "../components/MessageList";
 import CodeConsole from "./CodeConsole";
-import Button from 'react-bootstrap/Button'
+import Button from 'react-bootstrap/Button';
+import HandRaise from '../components/HandRaise';
 
 function LearnerPage(props) {
 
@@ -56,11 +57,11 @@ function LearnerPage(props) {
                 </div>
               </Row>
               <Row className = "code-button-row">
-                  <Button className = "run-code-button" variant="outline-success" onClick = {handleClick}>
+                  <Button className = "run-code-button" variant="outline-success" onClick = {handleClick}><i class="fas fa-play"></i>
                       Run Code
                   </Button>
         {/* TODO show last event time */}
-                  <Button className = "stop-code-button" variant="outline-danger" onClick = {handleClick2}>
+                  <Button className = "stop-code-button" variant="outline-danger" onClick = {handleClick2}><i class="fas fa-stop"></i>
                       Stop Code Execution
                   </Button>
               </Row>
@@ -76,6 +77,9 @@ function LearnerPage(props) {
                 <SendMessageForm sendLearnersChatMessage = {props.sendLearnersChatMessage}
 />
               </div>
+            <div className="help-pane">  
+                <HandRaise openHelpRequest = {props.openHelpRequest} sendHelpRequest={props.sendHelpRequest} sendLearnerCancelsHelpRequest = {props.sendLearnerCancelsHelpRequest}/>
+            </div>
             </Col>
           </Row>
       </Container>
