@@ -32,9 +32,10 @@ class EducatorPage extends Component {
           <Row>
             <Col>
               {/* THE activeLearners is empty. dummy info in learnerGrid line is just a test to show if the cards are wokring //TODO */}
-              {console.log(this.props.activeLearners.size)} 
-              {console.log(this.props.activeLearners)}
-              <LearnerGrid activeLearners = {this.props.activeLearners}/>
+              {/*console.log(this.props.activeLearners.size)} 
+              {console.log(this.props.activeLearners)*/}
+              {/*<LearnerGrid activeLearners = {this.props.activeLearners}/>*/}
+              <LearnerGrid dummyLearners = {this.props.dummyLearners}/>
             </Col>
             <Col>
               <MessageList chatMessages = {this.props.chatMessages}/>

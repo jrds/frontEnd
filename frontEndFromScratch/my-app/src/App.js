@@ -35,6 +35,7 @@ class App extends Component {
       lessonStartMsgId: 1,
       messageCounter: 2,
   
+      dummyLearners: [{name: "Jordan", age:29}, {name: "BanBan", age:21}, {name: "Jack", age:29}]
 
     };
   }
@@ -84,11 +85,7 @@ class App extends Component {
           role: msg.role,
           lessonState: msg.lessonState})
        
-        if (this.state.role === "LEARNER"){
-          this.setState({
-            activeLearners: [...this.state.activeLearners, {learnerId: msg.from, code: [], lastActive: "", messages: [], compiledCodeResponses: []}]
-          })
-        }
+      
           console.log(this.state)
       }
 
@@ -279,7 +276,8 @@ class App extends Component {
             userId={this.state.userId} 
             lessonState={this.state.lessonState} 
             chatMessages = {this.state.chatMessages}
-            activeLearners = {this.state.activeLearners}
+            //activeLearners = {this.state.activeLearners}
+            dummyLearners = {this.state.dummyLearners}
             />);
       }
     }
