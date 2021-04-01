@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import {Container, Row, Col } from 'react-bootstrap';
 import LessonPlan from './LessonPlan';
-import MessageList from './MessageList';
+import GroupedMessages from './GroupedMessages';
 import StartNextLesson from './StartNextLesson';
 import LearnerGrid from './LearnerGrid';
 import OpenHelpRequests from './OpenHelpRequests';
@@ -39,8 +39,7 @@ class EducatorPage extends Component {
               <LearnerGrid dummyLearners = {this.props.dummyLearners}/>
             </Col>
             <Col>
-              <MessageList chatMessages = {this.props.chatMessages}/>
-              <div> Will show help requests too!!</div>
+              <GroupedMessages chatMessages = {this.props.chatMessages} educatorId={this.props.educatorId} />
               <OpenHelpRequests openHelpRequests = {this.props.openHelpRequests} sendUpdateHelpRequest = {this.props.sendUpdateHelpRequest} sendEducatorCancelsHelpRequest = {this.props.sendEducatorCancelsHelpRequest}/>
             </Col>
           </Row>

@@ -127,7 +127,7 @@ class App extends Component {
           console.log ("Chat Message received")
           
           this.setState({ 
-            chatMessages: [...this.state.chatMessages, {text: msg.text, senderId: msg.from, id: msg.id, status:"Received"}]
+            chatMessages: [...this.state.chatMessages, {text: msg.text, from: msg.from, to: msg.to, id: msg.id, status:"Received"}]
           })
           // ************************************************************************** TODO **************************************************************************
           // need to write logic for managing the to and from, moreSo for Educator, maybe time stamp them too? - 
@@ -156,12 +156,6 @@ class App extends Component {
         })
 
       } 
-      //TODO  - dont' seem to be printing/receiving these messsages in the console log
-      else if(msg._type === "EducatorLessonStateInfo"){
-
-        console.log("Educator Lesson State Info message received " + msg)
-
-      }
       else if(msg._type === "OpenHelpRequestsInfo"){
         this.setState({
           openHelpRequests: [...msg.openHelpRequests]
@@ -220,7 +214,7 @@ class App extends Component {
   sendLearnersChatMessage = (messageText) =>
   { 
     this.setState({ 
-      chatMessages: [...this.state.chatMessages, {text: messageText, senderId: this.state.userId, id: this.state.messageCounter, status:"Pending"}]                      
+      chatMessages: [...this.state.chatMessages, {text: messageText, from: this.state.userId, to: this.state.educatorId, id: this.state.messageCounter, status:"Pending"}]                      
     }) //TODO - want to add concept of time here, to be able to sort the messsages by time, and will be useful for the educator to see how long it's been since a message was last sent etc.
             //  need to check if there's already an Instant or time being calculated on the back end, if so will just need to add to the chat message's variables. 
     this.state.ws.send(JSON.stringify({
@@ -353,6 +347,7 @@ class App extends Component {
             openHelpRequests = {this.state.openHelpRequests}
             sendUpdateHelpRequest = {this.sendUpdateHelpRequest}
             sendEducatorCancelsHelpRequest = {this.sendEducatorCancelsHelpRequest}
+            educatorId={this.state.userId} 
         />);
       }
     }
@@ -362,6 +357,6 @@ class App extends Component {
     }
   }
 }
-
+ 
 
 export default App;
