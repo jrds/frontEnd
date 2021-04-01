@@ -8,9 +8,9 @@ export class LearnerGrid extends Component {
     render() {
         return(
             //this.props.activeLearners.map(learner => {
-            this.props.dummyLearners.map(learner => {
+            this.props.dummyLearners.map((learner, idx) => {
                 return(
-                    <Card>
+                    <Card key = {idx}>
                         <Card.Body>
                             <Card.Title>{learner.name}</Card.Title>
                         </Card.Body>

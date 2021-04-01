@@ -5,6 +5,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import LearnerPage from './components/LearnerPage';
 import EducatorPage from './components/EducatorPage';
 
+
 class App extends Component {
 
   constructor(props) {
@@ -16,7 +17,7 @@ class App extends Component {
       educatorId: "",
       role:"",
       lessonState: "NOT_STARTED",
-      activeLearners:[],
+      learnersInAttendance:[],
       
       loggedIn: false,
       loginError: "",
@@ -26,6 +27,7 @@ class App extends Component {
       chatMessages: [],
       
       openHelpRequest: false,
+      openHelpRequests: [],
       
       code: "",
       consoleStrings: [],
@@ -33,8 +35,8 @@ class App extends Component {
       
       sessionStartMsgId: 0,
       lessonStartMsgId: 1,
-      helpRequestMsgId: 3,
       messageCounter: 4,
+      helpRequestCounter: 10000,
 
       dummyLearners: [{name: "Jordan", age:29}, {name: "BanBan", age:21}, {name: "Jack", age:29}]
 
@@ -85,7 +87,6 @@ class App extends Component {
           loggedIn:true,
           role: msg.role,
           lessonState: msg.lessonState})
-       
       
           console.log(this.state)
       }
@@ -155,6 +156,18 @@ class App extends Component {
         })
 
       } 
+      //TODO  - dont' seem to be printing/receiving these messsages in the console log
+      else if(msg._type === "EducatorLessonStateInfo"){
+
+        console.log("Educator Lesson State Info message received " + msg)
+
+      }
+      else if(msg._type === "OpenHelpRequestsInfo"){
+        this.setState({
+          openHelpRequests: [...msg.openHelpRequests]
+        })
+        console.log("Open Help Requests Info message received" + msg)
+      }
       else
       {
         console.log("Login: failure response received")
@@ -190,13 +203,19 @@ class App extends Component {
     const { ws } = this.state; 
   } */
 
-
+ 
   setCode = (code) => {
     this.setState({
       code: code
     });
     console.log(code);
   }
+
+  incrementMessageCounter = () => {
+    this.setState({
+      messageCounter : this.state.messageCounter + 1
+    });
+  };
 
   sendLearnersChatMessage = (messageText) =>
   { 
@@ -211,8 +230,8 @@ class App extends Component {
       text: messageText, 
       _type:"ChatMessage"}
     ))
-    this.setState({messageCounter: (this.state.messageCounter + 1)})
-
+    
+    this.incrementMessageCounter()
   }
 
   sendExecutionInput = (input) => {
@@ -223,8 +242,9 @@ class App extends Component {
       _type: "CodeExecutionInputRequest"
     }))
 
-    this.setState({messageCounter: (this.state.messageCounter + 1)})
+    this.incrementMessageCounter()
   }
+
 
   sendCodeToCompileMessage = () =>
   {
@@ -239,9 +259,7 @@ class App extends Component {
       _type: "ExecuteCodeRequest"
     }))
 
-    this.setState({
-      messageCounter: (this.state.messageCounter + 1)      
-    })
+    this.incrementMessageCounter()
   }
 
   sendTerminateExecutionRequest = () => {
@@ -252,36 +270,38 @@ class App extends Component {
       _type: "TerminateExecutionRequest"
     }))
 
-    this.setState({messageCounter: (this.state.messageCounter + 1)})
+    this.incrementMessageCounter()
   }
 
   // Only learners can do this:
   sendHelpRequest = () => {
     this.state.ws.send(JSON.stringify({
-      id: this.state.helpRequestMsgId,
+      id: this.state.messageCounter,
       from: this.state.userId,
       _type: "NewHelpRequest"
     }))
+
+    this.incrementMessageCounter()
   }
 
   sendLearnerCancelsHelpRequest = () => {
     this.state.ws.send(JSON.stringify({
       id: this.state.messageCounter,
-      leanerId: this.state.userId,
+      learnerId: this.state.userId,
       _type: "CancelHelpRequest"
     }))
 
-    this.setState({messageCounter: (this.state.messageCounter + 1)})
+    this.incrementMessageCounter()
   }
 
   sendEducatorCancelsHelpRequest = (learnerToCloseHelpReq) => {
     this.state.ws.send(JSON.stringify({
       id: this.state.messageCounter,
-      leanerId: learnerToCloseHelpReq,
+      learnerId: learnerToCloseHelpReq,
       _type: "CancelHelpRequest"
     }))
 
-    this.setState({messageCounter: (this.state.messageCounter + 1)})
+    this.incrementMessageCounter()
   }
 
   // only educators can do this:
@@ -289,12 +309,12 @@ class App extends Component {
     this.state.ws.send(JSON.stringify({
       id: this.state.messageCounter,
       from: this.state.userId,
-      leanerId: learnerToUpdateHelpReq,
+      learnerId: learnerToUpdateHelpReq,
       status: status,
       _type: "UpdateHelpStatusRequest"
     }))
 
-    this.setState({messageCounter: (this.state.messageCounter + 1)})
+    this.incrementMessageCounter()
   }
 
 
@@ -330,7 +350,10 @@ class App extends Component {
             chatMessages = {this.state.chatMessages}
             //activeLearners = {this.state.activeLearners}
             dummyLearners = {this.state.dummyLearners}
-            />);
+            openHelpRequests = {this.state.openHelpRequests}
+            sendUpdateHelpRequest = {this.sendUpdateHelpRequest}
+            sendEducatorCancelsHelpRequest = {this.sendEducatorCancelsHelpRequest}
+        />);
       }
     }
     else

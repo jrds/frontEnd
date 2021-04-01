@@ -77,3 +77,11 @@
 .stop-code-button {
   color: red;
 }
+
+.new-help-request{
+  background-color: green;
+}
+
+.in-progress-help-request{
+  background-color: orange;
+}

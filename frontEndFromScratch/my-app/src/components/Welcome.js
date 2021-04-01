@@ -7,7 +7,7 @@ export default class Welcome extends Component {
         return (
             <div>
                 <video src = "/videos/4now.mp4" autoPlay loop muted/>
-                <h1 className> WELCOME TO CODI</h1>
+                <h1 className = "welcome-header"> WELCOME TO CODI</h1>
                 <p>Your streamlined learning environment</p>
             </div>
     )}

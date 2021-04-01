@@ -4,6 +4,7 @@ import LessonPlan from './LessonPlan';
 import MessageList from './MessageList';
 import StartNextLesson from './StartNextLesson';
 import LearnerGrid from './LearnerGrid';
+import OpenHelpRequests from './OpenHelpRequests';
 
 class EducatorPage extends Component {
 
@@ -40,6 +41,7 @@ class EducatorPage extends Component {
             <Col>
               <MessageList chatMessages = {this.props.chatMessages}/>
               <div> Will show help requests too!!</div>
+              <OpenHelpRequests openHelpRequests = {this.props.openHelpRequests} sendUpdateHelpRequest = {this.props.sendUpdateHelpRequest} sendEducatorCancelsHelpRequest = {this.props.sendEducatorCancelsHelpRequest}/>
             </Col>
           </Row>
         </Container>

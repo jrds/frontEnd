@@ -13,7 +13,7 @@ class StartNextLesson extends Component {
         return (
             <div>
                 <Image src="/images/educatorLessonPic.jpg" fluid/>
-                <h1 className> YOUR NEXT LESSON</h1>
+                <h1> YOUR NEXT LESSON</h1>
                 <p>CD4101 - Intro to Java - Lesson 2/12</p>
                 <button onClick={this.handleClick}> 
                     Start Lesson 
