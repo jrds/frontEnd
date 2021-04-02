@@ -74,8 +74,7 @@ function LearnerPage(props) {
                 <ChatToggleAndHeader/>
                 <MessageList chatMessages = {props.chatMessages} userId = {props.userId}/> {// TODO - think about how to seperate out the learners own message from the educators - how it wil work with formating etc.
                 }
-                <SendMessageForm sendLearnersChatMessage = {props.sendLearnersChatMessage}
-/>
+                <SendMessageForm sendChatMessage = {props.sendLearnersChatMessage} educatorId = {props.educatorId}/>
               </div>
             <div className="help-pane">  
                 <HandRaise openHelpRequest = {props.openHelpRequest} sendHelpRequest={props.sendHelpRequest} sendLearnerCancelsHelpRequest = {props.sendLearnerCancelsHelpRequest}/>

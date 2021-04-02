@@ -39,7 +39,7 @@ class EducatorPage extends Component {
               <LearnerGrid dummyLearners = {this.props.dummyLearners}/>
             </Col>
             <Col>
-              <GroupedMessages chatMessages = {this.props.chatMessages} educatorId={this.props.educatorId} />
+              <GroupedMessages chatMessages = {this.props.chatMessages} educatorId={this.props.educatorId} sendEducatorsChatMessage = {this.props.sendEducatorsChatMessage} userId = {this.props.userId}/>
               <OpenHelpRequests openHelpRequests = {this.props.openHelpRequests} sendUpdateHelpRequest = {this.props.sendUpdateHelpRequest} sendEducatorCancelsHelpRequest = {this.props.sendEducatorCancelsHelpRequest}/>
             </Col>
           </Row>

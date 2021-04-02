@@ -228,6 +228,22 @@ class App extends Component {
     this.incrementMessageCounter()
   }
 
+  sendEducatorsChatMessage = (messageText, learnerId) =>
+  { 
+    this.setState({ 
+      chatMessages: [...this.state.chatMessages, {text: messageText, from: this.state.userId, to: this.state.educatorId, id: this.state.messageCounter, status:"Pending"}]                      
+    }) //TODO - want to add concept of time here, to be able to sort the messsages by time, and will be useful for the educator to see how long it's been since a message was last sent etc.
+            //  need to check if there's already an Instant or time being calculated on the back end, if so will just need to add to the chat message's variables. 
+    this.state.ws.send(JSON.stringify({
+      id: this.state.messageCounter, 
+      from:this.state.userId,
+      to: learnerId,
+      text: messageText, 
+      _type:"ChatMessage"}
+    ))
+    this.incrementMessageCounter()
+  }
+
   sendExecutionInput = (input) => {
     this.state.ws.send(JSON.stringify({
       id: this.state.messageCounter,
@@ -347,7 +363,8 @@ class App extends Component {
             openHelpRequests = {this.state.openHelpRequests}
             sendUpdateHelpRequest = {this.sendUpdateHelpRequest}
             sendEducatorCancelsHelpRequest = {this.sendEducatorCancelsHelpRequest}
-            educatorId={this.state.userId} 
+            educatorId={this.state.userId}
+            sendEducatorsChatMessage = {this.sendEducatorsChatMessage} 
         />);
       }
     }

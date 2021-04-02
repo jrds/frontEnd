@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 
 
-class SendMessageForm extends React.Component {
+class SendMessageForm extends Component {
  
     constructor(props) {
         super(props)
@@ -20,8 +20,12 @@ class SendMessageForm extends React.Component {
 
   onSubmit(e) {
       e.preventDefault();
-      this.props.sendLearnersChatMessage(this.state.message)
-
+      if (this.props.userId === this.props.educatorId){
+        this.props.sendChatMessage(this.state.message, this.props.learnerId)
+      }
+      else {
+        this.props.sendChatMessage(this.state.message)
+      }
       this.setState({
         message: '',
       })

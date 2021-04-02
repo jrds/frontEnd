@@ -7,13 +7,7 @@ import { Dropdown } from 'react-bootstrap';
 
 class OpenHelpRequests extends React.Component {
 
-  constructor(props) {
-    super(props)
     
-   // this.changeStatusToInProgress = this.changeStatusToInProgress.bind(this);
-   // this.changeStatusToCompleted = this.changeStatusToCompleted.bind(this);
-}
-  
   changeStatusToInProgress(learnerId) {
     this.props.sendUpdateHelpRequest(learnerId, "IN_PROGRESS")
     console.log("Status changed to in progress");
