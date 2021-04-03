@@ -30,6 +30,7 @@ class App extends Component {
       openHelpRequests: [],
       
       code: "",
+      codeChanged: false,
       consoleStrings: [],
       timeLastCompiled: "",
       
@@ -88,7 +89,9 @@ class App extends Component {
           role: msg.role,
           lessonState: msg.lessonState})
       
-          console.log(this.state)
+        console.log(this.state);
+          
+        setInterval(()=> {/** send Code to server if this.state.codeChanged === true & setState({ codeChanged: false}) */}, 1000);
       }
 
       else if (msg._type === "LearnerLessonStateInfo")
@@ -200,7 +203,8 @@ class App extends Component {
  
   setCode = (code) => {
     this.setState({
-      code: code
+      code: code,
+      codeChanged: true
     });
     console.log(code);
   }
