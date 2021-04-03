@@ -52,21 +52,19 @@ export class GroupedMessages extends Component {
         )
     } else {
        return (
-         messageGroups.map((item) => {
-           if (item.id === this.state.userSelected){
-            return (
-            <>
+         messageGroups.filter(item => item.id === this.state.userSelected).map((item) => {
+          return (
+            <div key = {item.id}>
               <Button onClick={() => this.setState({userSelected: ''})}>Back</Button>
-              <MessageList chatMessages={item.messages} key={item.id} />
+              <MessageList chatMessages={item.messages} userId = {this.props.educatorId}/>
               <SendMessageForm 
                   sendChatMessage = {this.props.sendEducatorsChatMessage} 
                   learnerId = {this.state.userSelected} 
                   userId = {this.props.educatorId}  
                   educatorId = {this.props.educatorId}
               />
-            </>
-            )
-          } 
+            </div>
+            ) 
          })
        )
     }

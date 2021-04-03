@@ -9,7 +9,7 @@ export class MessageList extends Component {
 
           if (message.from === this.props.userId) {
             return (
-              <li className = "message-from-me" key={message.id}>
+              <li className = "message-from-me" key={message.from + message.id}>
                 <div>
                   Me:
                 </div>
@@ -20,7 +20,7 @@ export class MessageList extends Component {
             )
           } else {
             return (
-              <div className = "message-from-other" key={message.id} style={{ float: 'right', marginRight: '18px', color: 'white', backgroundColor: '#3B2A50' }}>
+              <div className = "message-from-other" key={message.from + message.id} style={{ float: 'right', marginRight: '18px', color: 'white', backgroundColor: '#3B2A50' }}>
                 <div>
                   {message.from + ":"}
                 </div>
