@@ -41,7 +41,7 @@ class EducatorPage extends Component {
         //{/*console.log(this.props.activeLearners.size)} 
         //{console.log(this.props.activeLearners)*/}
         //{/*<LearnerGrid activeLearners = {this.props.activeLearners}/>*/}
-          display = <LearnerGrid dummyLearners = {this.props.dummyLearners}/>
+          display = <LearnerGrid learnersInAttendance = {this.props.learnersInAttendance} learnersLiveCode = {this.props.learnersLiveCode}/>
       } else {
           display = <ZoomInOnLearner userSelected = {this.state.userSelected}/>
       }

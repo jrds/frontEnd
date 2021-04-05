@@ -17,7 +17,7 @@ class App extends Component {
       educatorId: "",
       role:"",
       lessonState: "NOT_STARTED",
-      learnersInAttendance:[],
+      learnersInAttendance: new Map(),
       
       loggedIn: false,
       loginError: "",
@@ -33,6 +33,7 @@ class App extends Component {
       codeChanged: false,
       consoleStrings: [],
       timeLastCompiled: "",
+      learnersLiveCode: new Map(),
       
       sessionStartMsgId: 0,
       lessonStartMsgId: 1,
@@ -91,8 +92,10 @@ class App extends Component {
       
         console.log(this.state);
           
-        setInterval(()=> {/** send Code to server if this.state.codeChanged === true & setState({ codeChanged: false}) */}, 1000);
+        setInterval(()=> {if(this.state.codeChanged) { this.sendLiveCodeMessage()}}, 1000);
+        { /** send Code to server if this.state.codeChanged === true & setState({ codeChanged: false}) */}
       }
+
 
       else if (msg._type === "LearnerLessonStateInfo")
       {
@@ -110,7 +113,6 @@ class App extends Component {
           this.setState({openHelpRequest: false})
         }
       }
-
       else if (msg.id === this.state.lessonStartMsgId)
       {
           console.log("Start lesson success message received")
@@ -124,6 +126,32 @@ class App extends Component {
           console.log("Instruction received")
           
           this.setState({instructions: [...this.state.instructions, msg.instruction]});
+     }
+
+     else if(msg._type === "LearnersInAttendanceInfo")
+     {
+          console.log("Learners In Attendance Info received")
+          
+          if (!msg.learners.every(l => this.state.learnersInAttendance.has(l.id)))
+          {
+            var newLearnersInAttendance = new Map(this.state.learnersInAttendance);
+            msg.learners.forEach(l => { 
+              if(!newLearnersInAttendance.has(l.id))
+              {
+                newLearnersInAttendance.set(l.id, {
+                  id: l.id,
+                  name: l.name,
+                  code: ''
+                  //add extra info to here 
+                  //help request
+                  //unreadmessages boolean //TODO
+                })
+              }
+            });
+            this.setState({
+              learnersInAttendance: newLearnersInAttendance
+            })
+          }
      }
       
       else if (msg._type === "ChatMessage"){
@@ -164,6 +192,11 @@ class App extends Component {
           openHelpRequests: [...msg.openHelpRequests]
         })
         console.log("Open Help Requests Info message received" + msg)
+      }
+      else if(msg._type === "LatestLearnerCodeInfo"){
+        this.setState({
+          learnersLiveCode: new Map(this.state.learnersLiveCode.set(msg.learner, msg.latestCode))
+        })
       }
       else
       {
@@ -207,6 +240,19 @@ class App extends Component {
       codeChanged: true
     });
     console.log(code);
+  }
+
+  sendLiveCodeMessage = () => {
+    this.state.ws.send(JSON.stringify({
+      id: this.state.messageCounter, 
+      from:this.state.userId,
+      latestCode: this.state.code, 
+      _type:"UpdateLiveCodeRequest"}
+    ));
+    this.incrementMessageCounter();
+    this.setState({
+      codeChanged: false
+    });
   }
 
   incrementMessageCounter = () => {
@@ -363,12 +409,13 @@ class App extends Component {
             lessonState={this.state.lessonState} 
             chatMessages = {this.state.chatMessages}
             //activeLearners = {this.state.activeLearners}
-            dummyLearners = {this.state.dummyLearners}
+            learnersInAttendance = {this.state.learnersInAttendance}
             openHelpRequests = {this.state.openHelpRequests}
             sendUpdateHelpRequest = {this.sendUpdateHelpRequest}
             sendEducatorCancelsHelpRequest = {this.sendEducatorCancelsHelpRequest}
             educatorId={this.state.userId}
             sendEducatorsChatMessage = {this.sendEducatorsChatMessage} 
+            learnersLiveCode = {this.state.learnersLiveCode}
         />);
       }
     }

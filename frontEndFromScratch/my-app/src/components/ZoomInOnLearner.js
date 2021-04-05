@@ -4,9 +4,10 @@ export class ZoomInOnLearner extends Component {
     render() {
         return (
             <div>
-                <AboveThumbnailable/>
+                {/*<AboveThumbnailable/>
                 <Thumbnailable/>    
-                <BelowThumbNailable/>  {/* could end up being left and right*/}
+                <BelowThumbNailable/>  // could end up being left and right
+                */}
             </div>
         )
     }
