@@ -93,7 +93,6 @@ class App extends Component {
         console.log(this.state);
           
         setInterval(()=> {if(this.state.codeChanged) { this.sendLiveCodeMessage()}}, 1000);
-        { /** send Code to server if this.state.codeChanged === true & setState({ codeChanged: false}) */}
       }
 
 
@@ -194,9 +193,14 @@ class App extends Component {
         console.log("Open Help Requests Info message received" + msg)
       }
       else if(msg._type === "LatestLearnerCodeInfo"){
+        
         this.setState({
-          learnersLiveCode: new Map(this.state.learnersLiveCode.set(msg.learner, msg.latestCode))
+          learnersLiveCode: new Map(this.state.learnersLiveCode.set(msg.learner, msg.latestCode)),
         })
+
+        this.state.learnersInAttendance.get(msg.learner).code = msg.latestCode
+
+        console.log(this.state.learnersInAttendance)
       }
       else
       {
@@ -416,6 +420,7 @@ class App extends Component {
             educatorId={this.state.userId}
             sendEducatorsChatMessage = {this.sendEducatorsChatMessage} 
             learnersLiveCode = {this.state.learnersLiveCode}
+            
         />);
       }
     }

@@ -85,3 +85,24 @@
 .in-progress-help-request{
   background-color: orange;
 }
+
+.main-display-area-educator{
+  background-color: aquamarine;
+  height: 90%;
+  flex: content; 
+}
+
+.learner-grid{
+  
+}
+
+.thumbnail{
+
+}
+
+.start-next-lesson-img{
+  height: 400px;
+}
+
+
+
