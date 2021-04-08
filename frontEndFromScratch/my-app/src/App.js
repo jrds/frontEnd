@@ -17,8 +17,9 @@ class App extends Component {
       educatorId: "",
       role:"",
       lessonState: "NOT_STARTED",
-      learnersInAttendance: new Map(),
-      
+      learners: [],
+      detailsByLearner: new Map(),
+  
       loggedIn: false,
       loginError: "",
       userId: "",
@@ -127,30 +128,34 @@ class App extends Component {
           this.setState({instructions: [...this.state.instructions, msg.instruction]});
      }
 
-     else if(msg._type === "LearnersInAttendanceInfo")
+     else if(msg._type === "LearnersInfo")
      {
-          console.log("Learners In Attendance Info received")
+          console.log("Learners Info received")
+
+          var learners = [];
+          msg.learnersInAttendance.forEach(l => learners.push({id:l.id, name:l.name, attending:true}));
+          msg.learnersExpected.forEach(l => learners.push({id:l.id, name:l.name, attending:false}));
           
-          if (!msg.learners.every(l => this.state.learnersInAttendance.has(l.id)))
-          {
-            var newLearnersInAttendance = new Map(this.state.learnersInAttendance);
-            msg.learners.forEach(l => { 
-              if(!newLearnersInAttendance.has(l.id))
-              {
-                newLearnersInAttendance.set(l.id, {
-                  id: l.id,
-                  name: l.name,
-                  code: null
-                  //add extra info to here 
-                  //help request
-                  //unreadmessages boolean //TODO
-                })
-              }
-            });
-            this.setState({
-              learnersInAttendance: newLearnersInAttendance
-            })
-          }
+          var newDetailsByLearner = new Map(this.state.detailsByLearner);
+          learners.forEach(l => { 
+            if(!newDetailsByLearner.has(l.id))
+            {
+              newDetailsByLearner.set(l.id, {
+                id: l.id,
+                name: l.name,
+                code: null
+                //add extra info to here 
+                //help request
+                //unreadmessages boolean //TODO
+              })
+            }
+          });
+
+        this.setState({
+          learners: learners,
+          detailsByLearner: newDetailsByLearner
+        })
+          
      }
       
       else if (msg._type === "ChatMessage"){
@@ -193,15 +198,15 @@ class App extends Component {
         console.log("Open Help Requests Info message received" + msg)
       }
       else if(msg._type === "LatestLearnerCodeInfo"){
-        this.state.learnersInAttendance.get(msg.learner).code = msg.latestCode;
+        this.state.detailsByLearner.get(msg.learner).code = msg.latestCode;
         this.setState({
           learnersLiveCode: new Map(this.state.learnersLiveCode.set(msg.learner, msg.latestCode)),
-          learnersInAttendance: new Map(this.state.learnersInAttendance)
+          detailsByLearner: new Map(this.state.detailsByLearner)
 
         })
 
 
-        console.log(this.state.learnersInAttendance)
+        console.log(this.state.detailsByLearner)
       }
       else
       {
@@ -414,7 +419,8 @@ class App extends Component {
             lessonState={this.state.lessonState} 
             chatMessages = {this.state.chatMessages}
             //activeLearners = {this.state.activeLearners}
-            learnersInAttendance = {this.state.learnersInAttendance}
+            learners = {this.state.learners}
+            detailsByLearner = {this.state.detailsByLearner}
             openHelpRequests = {this.state.openHelpRequests}
             sendUpdateHelpRequest = {this.sendUpdateHelpRequest}
             sendEducatorCancelsHelpRequest = {this.sendEducatorCancelsHelpRequest}

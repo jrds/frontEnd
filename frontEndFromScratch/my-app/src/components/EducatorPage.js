@@ -42,18 +42,17 @@ class EducatorPage extends Component {
         //{console.log(this.props.activeLearners)*/}
         //{/*<LearnerGrid activeLearners = {this.props.activeLearners}/>*/}
           display = <LearnerGrid 
-            learnersInAttendance = {this.props.learnersInAttendance} 
-            learnersLiveCode = {this.props.learnersLiveCode}/>
+            learners = {this.props.learners}
+            detailsByLearner = {this.props.detailsByLearner}/>
         } else {
           display = <ZoomInOnLearner 
             userSelected = {this.state.userSelected}
-            learnersInAttendance = {this.props.learnersInAttendance} 
-            learnerObj = {this.props.learnersInAttendance.get(this.state.userSelected)}
+            learnerObj = {this.props.detailsByLearner.get(this.state.userSelected)}
           />
       }
 
       return (
-        <Container>
+        <Container fluid>
           <Row>
               <Col sm={9} className = "main-display-area-educator">
                 {display}
