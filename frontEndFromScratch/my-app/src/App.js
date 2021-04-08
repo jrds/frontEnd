@@ -140,7 +140,7 @@ class App extends Component {
                 newLearnersInAttendance.set(l.id, {
                   id: l.id,
                   name: l.name,
-                  code: ''
+                  code: null
                   //add extra info to here 
                   //help request
                   //unreadmessages boolean //TODO
@@ -193,12 +193,13 @@ class App extends Component {
         console.log("Open Help Requests Info message received" + msg)
       }
       else if(msg._type === "LatestLearnerCodeInfo"){
-        
+        this.state.learnersInAttendance.get(msg.learner).code = msg.latestCode;
         this.setState({
           learnersLiveCode: new Map(this.state.learnersLiveCode.set(msg.learner, msg.latestCode)),
+          learnersInAttendance: new Map(this.state.learnersInAttendance)
+
         })
 
-        this.state.learnersInAttendance.get(msg.learner).code = msg.latestCode
 
         console.log(this.state.learnersInAttendance)
       }

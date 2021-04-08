@@ -16,7 +16,8 @@ export class ZoomInOnLearner extends Component {
                 <BelowThumbNailable 
                     learnerObj = {this.props.learnerObj} 
                     learnerCode = {this.props.learnerObj.code} 
-                />  // could end up being left and right
+                />  {/* could end up being left and right //TODO
+                    think about instructor to see execution of learners code. would mean having the console strings from the latest execution on the learner obj*/}
                 </div>
         )
     }
