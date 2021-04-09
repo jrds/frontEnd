@@ -2,6 +2,8 @@ import React, { Component } from 'react'
 import MessageList from './MessageList';
 import Button from 'react-bootstrap/Button';
 import SendMessageForm from './SendMessageForm';
+import ButtonGroup from 'react-bootstrap/ButtonGroup';
+
 
 
 export class GroupedMessages extends Component {
@@ -36,19 +38,24 @@ export class GroupedMessages extends Component {
 
     if (this.state.userSelected === ''){
         return (
-          <>
+          <ButtonGroup vertical>
+          
           {
             //TODO  - sort before mapping (by time) hh-mm.... sorts naturally anyway.
             messageGroups.map(messageGroup => {
 
-              return (
-                <Button onClick={() => this.setState({ userSelected: messageGroup.id})} key = {messageGroup.id}>
-                  {messageGroup.id}
-                </Button>
+              var learnerName = this.props.detailsByLearner.get(messageGroup.id).name ;
+
+              return (  
+               <> 
+                 <Button onClick={() => this.setState({ userSelected: messageGroup.id})} key = {messageGroup.id}>
+                    {learnerName}
+                  </Button>
+               </>
               )
             })
           }
-          </>
+          </ButtonGroup>
         )
     } else {
        return (
@@ -56,7 +63,7 @@ export class GroupedMessages extends Component {
           return (
             <div key = {item.id}>
               <Button onClick={() => this.setState({userSelected: ''})}>Back</Button>
-              <MessageList chatMessages={item.messages} userId = {this.props.educatorId}/>
+              <MessageList handleSend={value => this.props.sendEducatorsChatMessage(value, this.state.userSelected)} chatMessages={item.messages} userId = {this.props.educatorId}/>
               <SendMessageForm 
                   sendChatMessage = {this.props.sendEducatorsChatMessage} 
                   learnerId = {this.state.userSelected} 

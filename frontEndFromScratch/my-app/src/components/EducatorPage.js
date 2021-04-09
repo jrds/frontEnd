@@ -64,6 +64,7 @@ class EducatorPage extends Component {
 
       if (this.state.showMessages){
         sideDisplay = <GroupedMessages 
+          detailsByLearner = {this.props.detailsByLearner}
           chatMessages = {this.props.chatMessages} 
           educatorId={this.props.educatorId} 
           sendEducatorsChatMessage = {this.props.sendEducatorsChatMessage} 
@@ -86,7 +87,7 @@ class EducatorPage extends Component {
             <Col sm= {this.state.chatExpanded ? 6 : 3}>
               <Row className = "educator-page-chat-help-header-row">
                 <Button className = "expand-chat-icon-button" onClick = {() => this.setState({chatExpanded: !this.state.chatExpanded})} variant = "light" size="sm"><i class={ this.state.chatExpanded ? "fas fa-compress-alt" : "fas fa-expand-alt"}></i></Button>
-                <ToggleButtonGroup name = "right-side-pane-toggle" className = "educator-page-chat-help-toggle">
+                <ToggleButtonGroup name = "right-side-pane-toggle" className = "educator-page-chat-help-toggle" default = "messageButton">
                   <ToggleButton 
                     onClick = {() => this.setState({showMessages: false})} 
                     name = "helpRequestButton"

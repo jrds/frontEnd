@@ -72,7 +72,7 @@ function LearnerPage(props) {
             <Col>
             <div className="message-pane">
                 <ChatToggleAndHeader/>
-                <MessageList chatMessages = {props.chatMessages} userId = {props.userId}/> {// TODO - think about how to seperate out the learners own message from the educators - how it wil work with formating etc.
+                <MessageList handleSend = {value => props.sendLearnersChatMessage(value)} educatorId = {props.educatorId} chatMessages = {props.chatMessages} userId = {props.userId}/> {// TODO - think about how to seperate out the learners own message from the educators - how it wil work with formating etc.
                 }
                 <SendMessageForm sendChatMessage = {props.sendLearnersChatMessage} educatorId = {props.educatorId}/>
               </div>

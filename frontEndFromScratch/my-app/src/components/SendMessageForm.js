@@ -17,7 +17,7 @@ class SendMessageForm extends Component {
         message: e.target.value
       })
   }
-
+  
   onSubmit(e) {
       e.preventDefault();
       if (this.props.userId === this.props.educatorId){
