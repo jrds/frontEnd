@@ -12,7 +12,7 @@ export class ZoomInOnLearner extends Component {
    
         return (
             <div>
-                <Button size="sm" onClick = {this.props.deSelectUser}>Back</Button>
+                <Button size="sm" variant="outline-info" onClick = {this.props.deSelectUser}>Back</Button>
                 <AboveThumbnailable learnerObj = {this.props.learnerObj}/>
                 <Thumbnailable learnerObj = {this.props.learnerObj}/>    
                 <BelowThumbNailable 

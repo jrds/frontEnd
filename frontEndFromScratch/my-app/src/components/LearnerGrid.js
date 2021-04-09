@@ -29,7 +29,7 @@ export class LearnerGrid extends Component {
                                             <CodeSectionOfLearnerCard name = {details.name} code = {details.code}/> 
                                         </div>
                                                                                 
-                                        <Button variant = "outline-info" value = {details.id} onClick={this.handleClick}>Zoom in</Button>
+                                        <Button variant = "info" value = {details.id} onClick={this.handleClick} block>Zoom in</Button>
                                         
                                     </Card.Body>
                         }

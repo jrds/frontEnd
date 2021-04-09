@@ -1,11 +1,14 @@
 import React, { Component } from 'react';
-import {Container, Row, Col } from 'react-bootstrap';
+import {Container, Row, Col, ToggleButton } from 'react-bootstrap';
 import LessonPlan from './LessonPlan';
 import GroupedMessages from './GroupedMessages';
 import StartNextLesson from './StartNextLesson';
 import LearnerGrid from './LearnerGrid';
 import OpenHelpRequests from './OpenHelpRequests';
 import ZoomInOnLearner from './ZoomInOnLearner';
+import ToggleButtonGroup from 'react-bootstrap/ToggleButtonGroup';
+import Button from 'react-bootstrap/Button'
+
 
 class EducatorPage extends Component {
 
@@ -13,6 +16,8 @@ class EducatorPage extends Component {
     super(props)
     this.state = {
       userSelected: '',
+      showMessages: true,
+      chatExpanded: false
     }
 
     this.selectUser = this.selectUser.bind(this);
@@ -55,15 +60,54 @@ class EducatorPage extends Component {
           />
       }
 
+      var sideDisplay;
+
+      if (this.state.showMessages){
+        sideDisplay = <GroupedMessages 
+          chatMessages = {this.props.chatMessages} 
+          educatorId={this.props.educatorId} 
+          sendEducatorsChatMessage = {this.props.sendEducatorsChatMessage} 
+          userId = {this.props.userId}
+        />
+      } else {
+        sideDisplay = <OpenHelpRequests 
+          openHelpRequests = {this.props.openHelpRequests} 
+          sendUpdateHelpRequest = {this.props.sendUpdateHelpRequest} 
+          sendEducatorCancelsHelpRequest = {this.props.sendEducatorCancelsHelpRequest}
+        />
+      }
+
       return (
-        <Container fluid>
+        <Container fluid className = "educator-page-lesson-started"> 
           <Row>
-              <Col sm={9} className = "main-display-area-educator">
-                {display}
-              </Col>
-            <Col sm={3}>
-              <GroupedMessages chatMessages = {this.props.chatMessages} educatorId={this.props.educatorId} sendEducatorsChatMessage = {this.props.sendEducatorsChatMessage} userId = {this.props.userId}/>
-              <OpenHelpRequests openHelpRequests = {this.props.openHelpRequests} sendUpdateHelpRequest = {this.props.sendUpdateHelpRequest} sendEducatorCancelsHelpRequest = {this.props.sendEducatorCancelsHelpRequest}/>
+            <Col sm= {this.state.chatExpanded ? 6 : 9} className = "main-display-area-educator">
+              {display}
+            </Col>
+            <Col sm= {this.state.chatExpanded ? 6 : 3}>
+              <Row className = "educator-page-chat-help-header-row">
+                <Button className = "expand-chat-icon-button" onClick = {() => this.setState({chatExpanded: !this.state.chatExpanded})} variant = "light" size="sm"><i class={ this.state.chatExpanded ? "fas fa-compress-alt" : "fas fa-expand-alt"}></i></Button>
+                <ToggleButtonGroup name = "right-side-pane-toggle" className = "educator-page-chat-help-toggle">
+                  <ToggleButton 
+                    onClick = {() => this.setState({showMessages: false})} 
+                    name = "helpRequestButton"
+                    variant = {this.state.showMessages ? "info" : "outline-info"} 
+                    type = "radio"
+                    >
+                      Help Requests
+                  </ToggleButton>
+                  <ToggleButton 
+                    onClick = {() => this.setState({showMessages: true})} 
+                    name = "messageButton"
+                    variant = {this.state.showMessages ? "outline-info" : "info"} 
+                    type = "radio"
+                    >
+                      Messages
+                  </ToggleButton>
+                </ToggleButtonGroup>
+              </Row>
+              <Row>
+                {sideDisplay}
+              </Row>
             </Col>
           </Row>
         </Container>

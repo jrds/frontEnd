@@ -103,5 +103,23 @@
   height: 400px;
 }
 
+.educator-page-lesson-started{
+  margin-top: 20px;
+  margin-left: 20px;
+  background-color: aliceblue;
+  height: 100%; 
+  
+}
 
+.educator-page-chat-help-toggle{
+  border: 1px solid #17a2b8;
+  border-radius: 5px;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
 
+.expand-chat-icon-button{
+  border: 1px solid #17a2b8;
+  border-radius: 5px;
+}
