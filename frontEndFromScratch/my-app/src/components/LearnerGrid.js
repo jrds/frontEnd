@@ -2,11 +2,15 @@ import React, { Component } from 'react';
 import Card from 'react-bootstrap/Card';
 import CardColumns from 'react-bootstrap/CardColumns'
 import CodeSectionOfLearnerCard from './CodeSectionOfLearnerCard';
-
+import Button from 'react-bootstrap/Button';
 
 export class LearnerGrid extends Component {
 
+    constructor(props){
+        super(props)
 
+        this.handleClick = this.handleClick.bind(this);
+    }
     
     render() {
         return(
@@ -24,41 +28,36 @@ export class LearnerGrid extends Component {
                                         <div>
                                             <CodeSectionOfLearnerCard name = {details.name} code = {details.code}/> 
                                         </div>
+                                                                                
+                                        <Button variant = "outline-info" value = {details.id} onClick={this.handleClick}>Zoom in</Button>
+                                        
                                     </Card.Body>
                         }
                         else
                         {
-                            body = <Card.Body>Has not yet joined the lesson</Card.Body>
+                            body = <Card.Body>Hasn't joined the lesson yet</Card.Body>
                         }
                         
                         return(
                             // Will eventually become LearnerCard - to handle all the info on learner.
-                            <Card className = {l.attending ? "attending" : "absent"} bg = {l.attending ? "warning" : "dark"} key = {details.id}> 
+                            <Card className = {l.attending ? "attending" : "absent"} bg = {l.attending ? "light" : "secondary"} border= {l.attending ? "info" : "null"} key = {details.id}> 
                                 <Card.Header>{details.name}</Card.Header>
                                 {body}
                             </Card>    
                         )          
                     })
-
-                    /* Array.from(this.props.learnersInAttendance, ([learnerId, learnerInfo]) => {
-                        return(
-
-                            // Will eventually become LearnerCard - to handle all the info on learner.
-                            <Card key = {learnerId}> 
-                                <Card.Body>
-                                    <Card.Title>{learnerInfo.name}</Card.Title>
-                                    <div>
-                                        <CodeSectionOfLearnerCard name = {learnerInfo.name} code = {learnerInfo.code}/> 
-                                    </div>
-                                </Card.Body>
-                            </Card>    
-                        )          
-                    }) */
                 }
             </CardColumns>    
           </>
         )
     }
+
+    handleClick(e){
+        console.log("User: " + e.target.value +" selected");
+        this.props.selectUser(e.target.value);
+    }
+
+
 }
 
 export default LearnerGrid

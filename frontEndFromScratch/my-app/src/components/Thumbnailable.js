@@ -6,24 +6,36 @@ import "codemirror/theme/material.css";
 
 export class Thumbnailable extends Component {
     render() {
-        return (
-            <div>
+        if(this.props.learnerObj.code !== null)
+        {
+            return (
                 <div>
-                <CodeMirror
-                    value= {this.props.learnerCode}
-                    options={{
-                        mode: 'xml',
-                        theme: 'material',
-                        lineNumbers: true,
-                        readOnly: true
-                    }}
-                    />
+                    <CodeMirror
+                        value= {this.props.learnerObj.code}
+                        options={{
+                            mode: 'xml',
+                            theme: 'material',
+                            lineNumbers: true,
+                            readOnly: true
+                        }}
+                        />
                 </div>
-
-                
-
-            </div>
-        )
+        )}
+        else {
+            return (
+                <div>
+                    <CodeMirror
+                        value= ''
+                        options={{
+                            mode: 'xml',
+                            theme: 'material',
+                            lineNumbers: true,
+                            readOnly: true
+                        }}
+                        />
+                </div>
+            )
+        }
     }
 }
 

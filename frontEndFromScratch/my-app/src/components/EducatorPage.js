@@ -14,6 +14,10 @@ class EducatorPage extends Component {
     this.state = {
       userSelected: '',
     }
+
+    this.selectUser = this.selectUser.bind(this);
+    this.deSelectUser = this.deSelectUser.bind(this);
+
 }
 
   render() {
@@ -36,18 +40,18 @@ class EducatorPage extends Component {
     { 
       var display; 
 
-      if (this.state.userSelected === '' || (this.props.learnersInAttendance.size === 0)) {
-        //{/* THE activeLearners is empty. dummy info in learnerGrid line is just a test to show if the cards are wokring //TODO */}
-        //{/*console.log(this.props.activeLearners.size)} 
-        //{console.log(this.props.activeLearners)*/}
-        //{/*<LearnerGrid activeLearners = {this.props.activeLearners}/>*/}
+      if (this.state.userSelected === '') {
+ 
           display = <LearnerGrid 
             learners = {this.props.learners}
-            detailsByLearner = {this.props.detailsByLearner}/>
+            detailsByLearner = {this.props.detailsByLearner}
+            selectUser = {this.selectUser}
+            />
         } else {
           display = <ZoomInOnLearner 
             userSelected = {this.state.userSelected}
             learnerObj = {this.props.detailsByLearner.get(this.state.userSelected)}
+            deSelectUser = {this.deSelectUser}
           />
       }
 
@@ -67,6 +71,19 @@ class EducatorPage extends Component {
       )
     }
   }
+
+  selectUser(userId){
+    this.setState ({
+      userSelected: userId
+    })
+  }
+
+  deSelectUser(){
+    this.setState ({
+      userSelected: ''
+    })
+  }
+
 }
 
 export default EducatorPage;
