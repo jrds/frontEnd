@@ -30,7 +30,7 @@ class OpenHelpRequests extends React.Component {
                       {helpRequest.learnerId}
                     </div>
                     <div className = "help-request-info">
-                      {helpRequest.timeReceived}
+                      {new Date(helpRequest.timeReceived * 1000).toLocaleTimeString([], {hourCycle: 'h23', hour: '2-digit', minute: '2-digit'})}
                       {helpRequest.status}
                     </div>
                     <Button type="button" variant="outline-warning" onClick={() => this.changeStatusToInProgress(helpRequest.learnerId)}>Mark as IN PROGRESS</Button>

@@ -3,6 +3,7 @@ import Card from 'react-bootstrap/Card';
 import CardColumns from 'react-bootstrap/CardColumns'
 import CodeSectionOfLearnerCard from './CodeSectionOfLearnerCard';
 import Button from 'react-bootstrap/Button';
+import Image from 'react-bootstrap/Image';
 
 export class LearnerGrid extends Component {
 
@@ -41,7 +42,8 @@ export class LearnerGrid extends Component {
                         return(
                             // Will eventually become LearnerCard - to handle all the info on learner.
                             <Card className = {l.attending ? "attending" : "absent"} bg = {l.attending ? "light" : "secondary"} border= {l.attending ? "info" : "null"} key = {details.id}> 
-                                <Card.Header>{details.name}</Card.Header>
+                                <Card.Header>
+                                    <Image className = "learner-grid-avatars" src={("/images/" + details.id + ".ico" )}></Image>{details.name}</Card.Header>
                                 {body}
                             </Card>    
                         )          

@@ -116,3 +116,15 @@
   border: 1px solid #17a2b8;
   border-radius: 5px;
 }
+
+
+.learner-card-code{
+  line-height: 1.3;
+  font-size: 12px;
+}
+
+.learner-grid-avatars{
+  height: 40px;
+  width: 40px;
+  margin-right: 10px;
+}

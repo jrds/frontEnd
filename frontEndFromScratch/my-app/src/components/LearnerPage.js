@@ -4,7 +4,6 @@ import Image from 'react-bootstrap/Image';
 import Spinner from 'react-bootstrap/Spinner';  
 import Editor from "../components/Editor";
 import Instruction from "./Instruction";
-import SendMessageForm from "../components/SendMessageForm";
 import ChatToggleAndHeader from "../components/ChatToggleAndHeader";
 import MessageList from "../components/MessageList";
 import CodeConsole from "./CodeConsole";
@@ -74,7 +73,6 @@ function LearnerPage(props) {
                 <ChatToggleAndHeader/>
                 <MessageList handleSend = {value => props.sendLearnersChatMessage(value)} educatorId = {props.educatorId} chatMessages = {props.chatMessages} userId = {props.userId}/> {// TODO - think about how to seperate out the learners own message from the educators - how it wil work with formating etc.
                 }
-                <SendMessageForm sendChatMessage = {props.sendLearnersChatMessage} educatorId = {props.educatorId}/>
               </div>
             <div className="help-pane">  
                 <HandRaise openHelpRequest = {props.openHelpRequest} sendHelpRequest={props.sendHelpRequest} sendLearnerCancelsHelpRequest = {props.sendLearnerCancelsHelpRequest}/>

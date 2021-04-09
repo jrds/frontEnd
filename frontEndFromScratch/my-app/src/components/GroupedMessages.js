@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import MessageList from './MessageList';
 import Button from 'react-bootstrap/Button';
-import SendMessageForm from './SendMessageForm';
 import ButtonGroup from 'react-bootstrap/ButtonGroup';
 
 
@@ -64,12 +63,6 @@ export class GroupedMessages extends Component {
             <div key = {item.id}>
               <Button onClick={() => this.setState({userSelected: ''})}>Back</Button>
               <MessageList handleSend={value => this.props.sendEducatorsChatMessage(value, this.state.userSelected)} chatMessages={item.messages} userId = {this.props.educatorId}/>
-              <SendMessageForm 
-                  sendChatMessage = {this.props.sendEducatorsChatMessage} 
-                  learnerId = {this.state.userSelected} 
-                  userId = {this.props.educatorId}  
-                  educatorId = {this.props.educatorId}
-              />
             </div>
             ) 
          })
