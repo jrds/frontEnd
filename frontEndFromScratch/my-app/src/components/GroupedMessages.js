@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import MessageList from './MessageList';
 import Button from 'react-bootstrap/Button';
 import ButtonGroup from 'react-bootstrap/ButtonGroup';
-import { MainContainer, ConversationList, Conversation, Avatar } from '@chatscope/chat-ui-kit-react';
+import { MainContainer, ConversationList, Conversation, Avatar, ChatContainer} from '@chatscope/chat-ui-kit-react';
 
 
 export class GroupedMessages extends Component {
@@ -11,7 +11,8 @@ export class GroupedMessages extends Component {
     super(props);
 
     this.state = {
-        userSelected: ''
+      userSelected: '',
+      userSelectedName: ''
     }
 }
 
@@ -37,6 +38,18 @@ export class GroupedMessages extends Component {
     var messages = [];
     messageGroups.filter(item => item.id === this.state.userSelected).forEach(item => messages = item.messages);
 
+
+    var messageList;
+
+    if(this.state.userSelected !== ''){
+      messageList = <MessageList handleSend={value => this.props.sendEducatorsChatMessage(value, this.state.userSelected)} chatMessages={messages} userId = {this.props.educatorId} otherUserId = {this.state.userSelected} otherUserName = {this.state.userSelectedName}/>
+    } else {
+      messageList = <ChatContainer />
+    }
+
+
+
+    
         return (
 
           <MainContainer>
@@ -52,9 +65,9 @@ export class GroupedMessages extends Component {
                     }
 
                     return (
-                      <Conversation onClick={() => this.setState({userSelected: l.id})} name={l.name} active={l.id === this.state.userSelected} lastSenderName={lastMessage.from == this.props.userId ? "me" : "them"} info={lastMessage.text}>
-                        <Avatar src= {`/images/${l.id}.ico`} name = {l.name} />
-                      </Conversation>
+                        <Conversation onClick={() => this.setState({userSelected: l.id, userSelectedName: l.name})} name={l.name} active={l.id === this.state.userSelected} lastSenderName={lastMessage.from == this.props.userId ? "me" : "them"} info={lastMessage.text}>
+                          <Avatar src= {`/images/${l.id}.ico`} name = {l.name} />
+                        </Conversation>
                     )
                   })
 
@@ -63,7 +76,7 @@ export class GroupedMessages extends Component {
               </ConversationList>
             </div>
             <div>
-              <MessageList handleSend={value => this.props.sendEducatorsChatMessage(value, this.state.userSelected)} chatMessages={messages} userId = {this.props.educatorId}/>
+              {messageList}
             </div>
 
             </MainContainer>

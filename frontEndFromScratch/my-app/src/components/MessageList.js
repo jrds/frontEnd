@@ -1,18 +1,36 @@
 import React, { Component } from 'react'
 import styles from '@chatscope/chat-ui-kit-styles/dist/default/styles.min.css';
-import { MainContainer, ChatContainer, MessageList as ChatScopeMessageList, Message, MessageInput, Avatar } from '@chatscope/chat-ui-kit-react';
+import { ConversationHeader, VoiceCallButton, VideoCallButton, InfoButton, ChatContainer, MessageList as ChatScopeMessageList, Message, MessageInput, Avatar } from '@chatscope/chat-ui-kit-react';
     
 
 
 export class MessageList extends Component {
 
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      voiceState: "none",
+      videoState: "none"
+    }
+  }
     
   render() {
     return (
     <>
-      
       <div style={{ position:"relative", height: "500px" }}>
           <ChatContainer>       
+
+          <ConversationHeader>
+                <Avatar src={`/images/${this.props.otherUserId}.ico`} name={this.props.otherUserName} />
+                <ConversationHeader.Content userName={this.props.otherUserName} info="Active 10 mins ago" />                                   
+                <ConversationHeader.Actions>                                                                             
+                  <VoiceCallButton title="Start voice call" onClick={() => this.setState({voiceState:"initiate"})} />
+                  <VideoCallButton title="Start video call" onClick={() => this.setState({videoState:"initiate"})}/>
+                  <InfoButton title="Eventually shows active help request?"/>
+                </ConversationHeader.Actions>
+            </ConversationHeader>
+
             <ChatScopeMessageList>
               {this.props.chatMessages.map(message => {                  
                   if(message.from === this.props.userId){

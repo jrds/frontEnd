@@ -15,6 +15,7 @@ class App extends Component {
       ws: null,
       lessonId: "",
       educatorId: "",
+      educatorName: "Prof", //TODO  - send name from server
       role:"",
       lessonState: "NOT_STARTED",
       learners: [],
@@ -395,6 +396,7 @@ class App extends Component {
             lessonState={this.state.lessonState} 
             instructions={this.state.instructions} 
             educatorId={this.state.educatorId} 
+            educatorName={this.state.educatorName}
             userId = {this.state.userId} 
             ws={this.state.ws} 
             chatMessages = {this.state.chatMessages}
