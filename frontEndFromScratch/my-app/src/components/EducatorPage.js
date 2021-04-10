@@ -64,6 +64,7 @@ class EducatorPage extends Component {
 
       if (this.state.showMessages){
         sideDisplay = <GroupedMessages 
+          learners = {this.props.learners}
           detailsByLearner = {this.props.detailsByLearner}
           chatMessages = {this.props.chatMessages} 
           educatorId={this.props.educatorId} 

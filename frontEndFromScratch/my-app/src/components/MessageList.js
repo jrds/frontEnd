@@ -12,7 +12,6 @@ export class MessageList extends Component {
     <>
       
       <div style={{ position:"relative", height: "500px" }}>
-        <MainContainer>
           <ChatContainer>       
             <ChatScopeMessageList>
               {this.props.chatMessages.map(message => {                  
@@ -42,7 +41,6 @@ export class MessageList extends Component {
               placeholder="Type message here" 
               onSend={this.props.handleSend}/>        
           </ChatContainer>
-        </MainContainer>
       </div>
     </>  
     )

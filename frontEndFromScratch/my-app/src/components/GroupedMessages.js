@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import MessageList from './MessageList';
 import Button from 'react-bootstrap/Button';
 import ButtonGroup from 'react-bootstrap/ButtonGroup';
-import { ConversationList, Conversation, Avatar } from '@chatscope/chat-ui-kit-react';
+import { MainContainer, ConversationList, Conversation, Avatar } from '@chatscope/chat-ui-kit-react';
 
 
 export class GroupedMessages extends Component {
@@ -34,23 +34,50 @@ export class GroupedMessages extends Component {
       return { id, messages };
     });
 
+    var messages = [];
+    messageGroups.filter(item => item.id === this.state.userSelected).forEach(item => messages = item.messages);
 
-    if (this.state.userSelected === ''){
         return (
+
+          <MainContainer>
 
             <div style={{height: "340px"}}>
               <ConversationList>
+                  {this.props.learners.filter(l => l.attending).map(l => {
+                    var lastMessage = {from:"", text:""};
+                    var group = messageGroups.find(g => g.id === l.id);
+                    if (group)
+                    {
+                      lastMessage = group.messages[group.messages.length - 1];
+                    }
 
-                  <Conversation name="Jordan" lastSenderName="Me" info="Yes i can do it for you">
-                    <Avatar src= "/images/u1900.ico" name = "Jordan" />
-                  </Conversation>
-        
-                  <Conversation name="Aaron" lastSenderName="Aaron" info="Yes i can do it for you">
-                    <Avatar src= "/images/u1902.ico" name = "Aaron" />
-                  </Conversation>
+                    return (
+                      <Conversation onClick={() => this.setState({userSelected: l.id})} name={l.name} active={l.id === this.state.userSelected} lastSenderName={lastMessage.from == this.props.userId ? "me" : "them"} info={lastMessage.text}>
+                        <Avatar src= {`/images/${l.id}.ico`} name = {l.name} />
+                      </Conversation>
+                    )
+                  })
+
+                  }
                   
               </ConversationList>
             </div>
+            <div>
+              <MessageList handleSend={value => this.props.sendEducatorsChatMessage(value, this.state.userSelected)} chatMessages={messages} userId = {this.props.educatorId}/>
+            </div>
+
+            </MainContainer>
+
+        )
+  }
+}
+
+
+
+export default GroupedMessages
+
+
+
 
           // <ButtonGroup vertical>
           
@@ -70,22 +97,3 @@ export class GroupedMessages extends Component {
           //   })
           // }
           // </ButtonGroup>
-        )
-    } else {
-       return (
-         messageGroups.filter(item => item.id === this.state.userSelected).map((item) => {
-          return (
-            <div key = {item.id}>
-              <Button onClick={() => this.setState({userSelected: ''})}>Back</Button>
-              <MessageList handleSend={value => this.props.sendEducatorsChatMessage(value, this.state.userSelected)} chatMessages={item.messages} userId = {this.props.educatorId}/>
-            </div>
-            ) 
-         })
-       )
-    }
-  }
-}
-
-
-
-export default GroupedMessages
