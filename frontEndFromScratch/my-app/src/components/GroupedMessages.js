@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import MessageList from './MessageList';
 import Button from 'react-bootstrap/Button';
 import ButtonGroup from 'react-bootstrap/ButtonGroup';
-
+import { ConversationList, Conversation, Avatar } from '@chatscope/chat-ui-kit-react';
 
 
 export class GroupedMessages extends Component {
@@ -37,24 +37,39 @@ export class GroupedMessages extends Component {
 
     if (this.state.userSelected === ''){
         return (
-          <ButtonGroup vertical>
+
+            <div style={{height: "340px"}}>
+              <ConversationList>
+
+                  <Conversation name="Jordan" lastSenderName="Me" info="Yes i can do it for you">
+                    <Avatar src= "/images/u1900.ico" name = "Jordan" />
+                  </Conversation>
+        
+                  <Conversation name="Aaron" lastSenderName="Aaron" info="Yes i can do it for you">
+                    <Avatar src= "/images/u1902.ico" name = "Aaron" />
+                  </Conversation>
+                  
+              </ConversationList>
+            </div>
+
+          // <ButtonGroup vertical>
           
-          {
-            //TODO  - sort before mapping (by time) hh-mm.... sorts naturally anyway.
-            messageGroups.map(messageGroup => {
+          // {
+          //   //TODO  - sort before mapping (by time) hh-mm.... sorts naturally anyway.
+          //   messageGroups.map(messageGroup => {
 
-              var learnerName = this.props.detailsByLearner.get(messageGroup.id).name ;
+          //     var learnerName = this.props.detailsByLearner.get(messageGroup.id).name ;
 
-              return (  
-               <> 
-                 <Button onClick={() => this.setState({ userSelected: messageGroup.id})} key = {messageGroup.id}>
-                    {learnerName}
-                  </Button>
-               </>
-              )
-            })
-          }
-          </ButtonGroup>
+          //     return (  
+          //      <> 
+          //        <Button onClick={() => this.setState({ userSelected: messageGroup.id})} key = {messageGroup.id}>
+          //           {learnerName}
+          //         </Button>
+          //      </>
+          //     )
+          //   })
+          // }
+          // </ButtonGroup>
         )
     } else {
        return (

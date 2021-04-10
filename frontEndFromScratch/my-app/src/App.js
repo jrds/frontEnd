@@ -52,7 +52,7 @@ class App extends Component {
   connect = (userId, password, lessonId) => {
     console.log("connecting to websocket");
     this.setState({userId, lessonId});
-    var ws = new WebSocket(`ws://${userId}:${password}@localhost:8080/lesson/${lessonId}`);
+    var ws = new WebSocket(`ws://${userId}:${password}@${window.location.hostname}:8080/lesson/${lessonId}`);
     let that = this; // cache the this
     var connectInterval;
 
@@ -204,7 +204,6 @@ class App extends Component {
           detailsByLearner: new Map(this.state.detailsByLearner)
 
         })
-
 
         console.log(this.state.detailsByLearner)
       }

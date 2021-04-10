@@ -43,7 +43,7 @@ export class LearnerGrid extends Component {
                             // Will eventually become LearnerCard - to handle all the info on learner.
                             <Card className = {l.attending ? "attending" : "absent"} bg = {l.attending ? "light" : "secondary"} border= {l.attending ? "info" : "null"} key = {details.id}> 
                                 <Card.Header>
-                                    <Image className = "learner-grid-avatars" src={("/images/" + details.id + ".ico" )}></Image>{details.name}</Card.Header>
+                                    <Image style={{opacity: l.attending ? 1 : 0.5}} className = "learner-grid-avatars" src={("/images/" + details.id + ".ico" )}></Image>{details.name}</Card.Header>
                                 {body}
                             </Card>    
                         )          
