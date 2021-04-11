@@ -55,7 +55,7 @@ class App extends Component {
   connect = (userId, password, lessonId) => {
     console.log("connecting to websocket");
     this.setState({userId, lessonId});
-    var ws = new WebSocket(`ws://${userId}:${password}@${window.location.hostname}:8080/lesson/${lessonId}`);
+    var ws = new WebSocket(`wss://${userId}:${password}@${window.location.hostname}:8443/lesson/${lessonId}`);
     let that = this; // cache the this
     var connectInterval;
 
@@ -450,11 +450,15 @@ class App extends Component {
       const peerConnection = new RTCPeerConnection({
         iceServers: [{ urls: 'stun:stun.l.google.com:19302' }]
       });
+      peerConnection.ontrack = (event) => {
+        console.log("ontrack happened")
+        this.setState({avState: Object.assign({}, this.state.avState, {stream:event.streams[0], state: "streaming"})});
+      };
       stream.getTracks().forEach(track => peerConnection.addTrack(track, stream));
       peerConnection.setRemoteDescription(this.state.avState.offer)
       .then(() => peerConnection.createAnswer())
       .then(answer => {
-        this.setState({avState: Object.assign({}, this.state.avState, {stream, peerConnection, answer})});
+        this.setState({avState: Object.assign({}, this.state.avState, {peerConnection, answer})});
         return peerConnection.setLocalDescription(answer);
       })
       .then(() => {
@@ -471,7 +475,6 @@ class App extends Component {
             _type: "AVAnswer"
           }));
   
-          this.setState({avState: Object.assign({}, this.state.avState, {state: "streaming"})});
           this.incrementMessageCounter();
         }
       })
@@ -483,19 +486,16 @@ class App extends Component {
   { 
     console.log("Answering")
   
-    if (this.state.avState.state === "offerReceived")
-    {
-      this.state.ws.send(JSON.stringify({
-        id: this.state.messageCounter, 
-        from: this.state.userId,
-        to: this.state.avState.to,
-        type : this.state.avState.type,
-        _type: "AVReject"
-      }));
+    this.state.ws.send(JSON.stringify({
+      id: this.state.messageCounter, 
+      from: this.state.userId,
+      to: this.state.avState.to,
+      type : this.state.avState.type,
+      _type: "AVReject"
+    }));
 
-      this.incrementMessageCounter();
-      this.setState({avState: Object.assign({}, this.state.avState, {state: "none"})});
-    }
+    this.incrementMessageCounter();
+    this.setState({avState: Object.assign({}, this.state.avState, {state: "none"})});
   }
 
   cancelCall = () =>
@@ -504,13 +504,17 @@ class App extends Component {
   }
 
   makeOffer = (stream) => {
-    this.setState({
-      avState: Object.assign({}, this.state.avState, {stream})
-    });
+    // this.setState({
+    //   avState: Object.assign({}, this.state.avState, {stream})
+    // });
 
     const peerConnection = new RTCPeerConnection({
         iceServers: [{ urls: 'stun:stun.l.google.com:19302' }]
       });
+    peerConnection.ontrack = (event) => {
+      console.log("ontrack happened")
+      this.setState({avState: Object.assign({}, this.state.avState, {stream:event.streams[0], state: "streaming"})});
+    };
     stream.getTracks().forEach(track => peerConnection.addTrack(track, stream));
 
     peerConnection.createOffer()
@@ -543,7 +547,7 @@ class App extends Component {
   callAccepted = () => {
     this.state.avState.peerConnection.setRemoteDescription(this.state.avState.answer)
     .then(() => {
-      this.setState({avState: Object.assign({}, this.state.avState, {state: "streaming"})});
+      //this.setState({avState: Object.assign({}, this.state.avState, {state: "streaming"})});
     })
     .catch(reason => this.streamFailed(reason))
   }
