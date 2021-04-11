@@ -1,9 +1,6 @@
 import React from 'react'
-import {Container, Row, Col } from 'react-bootstrap';
+import {Container, Row } from 'react-bootstrap';
 import Button from 'react-bootstrap/Button';
-import CodeConsole from "./CodeConsole";
-
-
 
 function BelowThumbNailable(props){
 

@@ -42,6 +42,8 @@ class App extends Component {
       messageCounter: 4,
       helpRequestCounter: 10000,
 
+      avState: {state:"none", offer:null},
+
       dummyLearners: [{name: "Jordan", age:29}, {name: "BanBan", age:21}, {name: "Jack", age:29}]
 
     };
@@ -159,16 +161,43 @@ class App extends Component {
           
      }
       
-      else if (msg._type === "ChatMessage"){
-          console.log ("Chat Message received")
-          
-          this.setState({ 
-            chatMessages: [...this.state.chatMessages, {text: msg.text, from: msg.from, to: msg.to, id: msg.id, status:"Received"}]
-          })
-          // ************************************************************************** TODO **************************************************************************
-          // need to write logic for managing the to and from, moreSo for Educator, maybe time stamp them too? - 
+    else if (msg._type === "ChatMessage"){
+        console.log ("Chat Message received")
+        
+        this.setState({ 
+          chatMessages: [...this.state.chatMessages, {text: msg.text, from: msg.from, to: msg.to, id: msg.id, status:"Received"}]
+        })
+        // ************************************************************************** TODO **************************************************************************
+        // need to write logic for managing the to and from, moreSo for Educator, maybe time stamp them too? - 
+    }
+    else if (msg._type === "AVOffer"){
+      console.log ("AVOffer Message received");
+      if (this.state.avState.state === "none")
+      {        
+        this.setState({avState: Object.assign({}, this.state.avState, {
+          state: "offerReceived", 
+          to: msg.from,
+          type: msg.type, 
+          offer: JSON.parse(msg.offer)
+        })});
       }
-      else if(msg._type === "FailureResponse"){
+    }
+    else if (msg._type === "AVAnswer"){
+      console.log ("AVAnswer Message received");
+      if (this.state.avState.state === "offering")
+      {
+        this.setState({avState: Object.assign({}, this.state.avState, {answer: JSON.parse(msg.answer)})});
+        this.callAccepted();
+      }
+    }
+    else if (msg._type === "AVReject"){
+      console.log ("AVReject Message received")
+      if (this.state.avState.state === "offering")
+      {        
+        this.streamFailed("Call declined")
+      }
+    }
+    else if(msg._type === "FailureResponse"){
           console.log("Failure Response received")
           console.log(msg.failureReason)
       }
@@ -387,6 +416,143 @@ class App extends Component {
     this.incrementMessageCounter()
   }
 
+  // AV Functions
+  
+  educatorStartCall = (type, learnerId) =>
+  { 
+    this.setState({ avState: { state: "initiating", type, to: learnerId} });
+    this.startCall();
+  }
+
+  learnerStartCall = (type) =>
+  { 
+    this.setState({ avState: { state: "initiating", type, to: this.state.educatorId } });
+    this.startCall();
+  }
+  
+  startCall = () =>
+  { 
+    this.startStreams(stream => setTimeout(() => this.makeOffer(stream), 3000));
+  }
+  
+  startStreams = (callback) =>
+  { 
+    var streams = this.state.avState.type === "audio" ? {audio: true} : {video: true, audio: true};
+
+    window.navigator.mediaDevices.getUserMedia(streams)
+    .then(stream => callback(stream))
+    .catch(reason => this.streamFailed(reason))
+  }
+  
+  acceptCall = () =>
+  { 
+    this.startStreams(stream => {
+      const peerConnection = new RTCPeerConnection({
+        iceServers: [{ urls: 'stun:stun.l.google.com:19302' }]
+      });
+      stream.getTracks().forEach(track => peerConnection.addTrack(track, stream));
+      peerConnection.setRemoteDescription(this.state.avState.offer)
+      .then(() => peerConnection.createAnswer())
+      .then(answer => {
+        this.setState({avState: Object.assign({}, this.state.avState, {stream, peerConnection, answer})});
+        return peerConnection.setLocalDescription(answer);
+      })
+      .then(() => {
+        console.log("Answering")
+  
+        if (this.state.avState.state === "offerReceived")
+        {
+          this.state.ws.send(JSON.stringify({
+            id: this.state.messageCounter, 
+            from: this.state.userId,
+            to: this.state.avState.to,
+            type : this.state.avState.type,
+            answer: JSON.stringify(this.state.avState.answer), 
+            _type: "AVAnswer"
+          }));
+  
+          this.setState({avState: Object.assign({}, this.state.avState, {state: "streaming"})});
+          this.incrementMessageCounter();
+        }
+      })
+        .catch(reason => this.streamFailed(reason))
+    });
+  }
+  
+  rejectCall = () =>
+  { 
+    console.log("Answering")
+  
+    if (this.state.avState.state === "offerReceived")
+    {
+      this.state.ws.send(JSON.stringify({
+        id: this.state.messageCounter, 
+        from: this.state.userId,
+        to: this.state.avState.to,
+        type : this.state.avState.type,
+        _type: "AVReject"
+      }));
+
+      this.incrementMessageCounter();
+      this.setState({avState: Object.assign({}, this.state.avState, {state: "none"})});
+    }
+  }
+
+  cancelCall = () =>
+  { 
+    this.setState({avState: Object.assign({}, this.state.avState, {state: "none"})});
+  }
+
+  makeOffer = (stream) => {
+    this.setState({
+      avState: Object.assign({}, this.state.avState, {stream})
+    });
+
+    const peerConnection = new RTCPeerConnection({
+        iceServers: [{ urls: 'stun:stun.l.google.com:19302' }]
+      });
+    stream.getTracks().forEach(track => peerConnection.addTrack(track, stream));
+
+    peerConnection.createOffer()
+    .then(offer => {
+      console.log("Offer created")
+      this.setState({avState: Object.assign({}, this.state.avState, {peerConnection, offer})});
+      return peerConnection.setLocalDescription(offer);
+    })
+    .then(() => {
+      console.log("Making offer")
+
+      if (this.state.avState.state === "initiating")
+      {
+        this.state.ws.send(JSON.stringify({
+          id: this.state.messageCounter, 
+          from: this.state.userId,
+          to: this.state.avState.to,
+          type : this.state.avState.type,
+          offer: JSON.stringify(this.state.avState.offer), 
+          _type: "AVOffer"
+        }));
+
+        this.setState({avState: Object.assign({}, this.state.avState, {state: "offering"})});
+        this.incrementMessageCounter();
+      }
+    })
+    .catch(reason => this.streamFailed(reason))
+  }
+
+  callAccepted = () => {
+    this.state.avState.peerConnection.setRemoteDescription(this.state.avState.answer)
+    .then(() => {
+      this.setState({avState: Object.assign({}, this.state.avState, {state: "streaming"})});
+    })
+    .catch(reason => this.streamFailed(reason))
+  }
+
+  streamFailed = (reason) => {
+    var text = typeof reason === "string" ? reason : reason.toString();
+    console.log("video failed: " + text);
+    this.setState({avState: Object.assign({}, this.state.avState, {state: "failed", reason: text})});
+  }
 
   render() {
     if (this.state.loggedIn)
@@ -411,6 +577,10 @@ class App extends Component {
             openHelpRequest = {this.state.openHelpRequest}
             sendHelpRequest = {this.sendHelpRequest}
             sendLearnerCancelsHelpRequest = {this.sendLearnerCancelsHelpRequest}
+            avState = {this.state.avState}            
+            learnerStartCall = {this.learnerStartCall}
+            acceptCall = {this.acceptCall}
+            rejectCall = {this.rejectCall}
             />);
       }
       else if (this.state.role === "EDUCATOR"){
@@ -428,7 +598,9 @@ class App extends Component {
             educatorId={this.state.userId}
             sendEducatorsChatMessage = {this.sendEducatorsChatMessage} 
             learnersLiveCode = {this.state.learnersLiveCode}
-            
+            avState = {this.state.avState}
+            educatorStartCall = {this.educatorStartCall}
+            cancelCall = {this.cancelCall}
         />);
       }
     }

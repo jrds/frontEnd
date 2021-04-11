@@ -134,3 +134,12 @@
   width: 40px;
   margin-right: 10px;
 }
+
+
+.messaging-container{
+  width: 100%;
+}
+
+.instructions-row{
+  padding: 10px;
+}

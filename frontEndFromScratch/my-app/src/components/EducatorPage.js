@@ -70,6 +70,9 @@ class EducatorPage extends Component {
           educatorId={this.props.educatorId} 
           sendEducatorsChatMessage = {this.props.sendEducatorsChatMessage} 
           userId = {this.props.userId}
+          avState = {this.props.avState}            
+          educatorStartCall = {this.props.educatorStartCall}
+          cancelCall = {this.props.cancelCall}
         />
       } else {
         sideDisplay = <OpenHelpRequests 

@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
 import MessageList from './MessageList';
-import Button from 'react-bootstrap/Button';
-import ButtonGroup from 'react-bootstrap/ButtonGroup';
-import { MainContainer, ConversationList, Conversation, Avatar, ChatContainer} from '@chatscope/chat-ui-kit-react';
+import { MainContainer, ConversationList, Conversation, Avatar, ChatContainer, Sidebar, Search} from '@chatscope/chat-ui-kit-react';
+import styles from '@chatscope/chat-ui-kit-styles/dist/default/styles.min.css';
+
 
 
 export class GroupedMessages extends Component {
@@ -42,7 +42,15 @@ export class GroupedMessages extends Component {
     var messageList;
 
     if(this.state.userSelected !== ''){
-      messageList = <MessageList handleSend={value => this.props.sendEducatorsChatMessage(value, this.state.userSelected)} chatMessages={messages} userId = {this.props.educatorId} otherUserId = {this.state.userSelected} otherUserName = {this.state.userSelectedName}/>
+      messageList = <MessageList handleSend={value => this.props.sendEducatorsChatMessage(value, this.state.userSelected)} 
+                                 chatMessages={messages} 
+                                 userId = {this.props.educatorId} 
+                                 otherUserId = {this.state.userSelected} 
+                                 otherUserName = {this.state.userSelectedName}
+                                 avState = {this.props.avState}  
+                                 startCall = {type => this.props.educatorStartCall(type, this.state.userSelected)}
+                                 cancelCall = {this.props.cancelCall}
+                                 />          
     } else {
       messageList = <ChatContainer />
     }
@@ -51,35 +59,39 @@ export class GroupedMessages extends Component {
 
     
         return (
+          <div style={{
+            height: "600px",
+            width: "100%",
+            position: "relative"
+          }}>
+          <MainContainer className = "messaging-container" responsive>
+            <Sidebar position="left" scrollable={false}>
+                <Search placeholder="Search..." />
+                <ConversationList>
+                      {this.props.learners.filter(l => l.attending).map(l => {
+                        var lastMessage = {from:"", text:""};
+                        var group = messageGroups.find(g => g.id === l.id);
+                        if (group)
+                        {
+                          lastMessage = group.messages[group.messages.length - 1];
+                        }
 
-          <MainContainer>
+                        return (
+                            <Conversation onClick={() => this.setState({userSelected: l.id, userSelectedName: l.name})} name={l.name} active={l.id === this.state.userSelected} lastSenderName={lastMessage.from === this.props.userId ? "me" : "them"} info={lastMessage.text}>
+                              <Avatar src= {`/images/${l.id}.ico`} name = {l.name} />
+                            </Conversation>
+                        )
+                      })
 
-            <div style={{height: "340px"}}>
-              <ConversationList>
-                  {this.props.learners.filter(l => l.attending).map(l => {
-                    var lastMessage = {from:"", text:""};
-                    var group = messageGroups.find(g => g.id === l.id);
-                    if (group)
-                    {
-                      lastMessage = group.messages[group.messages.length - 1];
-                    }
-
-                    return (
-                        <Conversation onClick={() => this.setState({userSelected: l.id, userSelectedName: l.name})} name={l.name} active={l.id === this.state.userSelected} lastSenderName={lastMessage.from == this.props.userId ? "me" : "them"} info={lastMessage.text}>
-                          <Avatar src= {`/images/${l.id}.ico`} name = {l.name} />
-                        </Conversation>
-                    )
-                  })
-
-                  }
-                  
-              </ConversationList>
-            </div>
+                      }
+                </ConversationList>
+            </Sidebar>
             <div>
               {messageList}
             </div>
 
-            </MainContainer>
+          </MainContainer>
+          </div>
 
         )
   }

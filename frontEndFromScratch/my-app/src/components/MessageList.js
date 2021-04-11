@@ -10,58 +10,56 @@ export class MessageList extends Component {
     super(props);
     this.videoRef = React.createRef()
     this.audioRef = React.createRef()
-
-    this.state = {
-      voiceState: "none",
-      videoState: "none"
-    }
   }
 
   render() {
     var avComponent = <div />;
-    var actions;
+    var actions = <ConversationHeader.Actions/>;
 
-    if (this.state.voiceState === "none" && this.state.videoState === "none")
+    if (this.props.avState.state === "none")
     {
-      actions = <ConversationHeader.Actions>
-                  <VoiceCallButton title="Start voice call" disabled={this.state.voiceState !== "none" || this.state.videoState !== "none"} onClick={() => this.initiateVoiceCall()} />
-                  <VideoCallButton title="Start video call" disabled={this.state.voiceState !== "none" || this.state.videoState !== "none"} onClick={() => this.initiateVideoCall()} />
+      if (this.props.startCall)
+      {
+        actions = <ConversationHeader.Actions>
+                  <VoiceCallButton title="Start voice call" onClick={() => this.props.startCall("audio")} />
+                  <VideoCallButton title="Start video call" onClick={() => this.props.startCall("video")} />
                   <InfoButton title="Eventually shows active help request?" />
                 </ConversationHeader.Actions>
+      }
     }
-    if (this.state.voiceState === "initiate") {
-      avComponent = <div><Loader>Starting voice call</Loader><Button border onClick={() => this.setState({ voiceState: "none" })}>Cancel</Button></div>
+    else if (this.props.avState.state === "initiating") {
+      avComponent = <div><Loader>Starting call</Loader></div>
       actions = <ConversationHeader.Actions>
-                  <Button border onClick={() => this.setState({ voiceState: "none" })}>Cancel</Button>
+                  <Button border onClick={() => this.props.cancelCall()}>Cancel</Button>
                 </ConversationHeader.Actions>
     }
-    else if (this.state.voiceState === "failed") {
-      avComponent = <div><Alert variant="danger"><p>Voice call failed</p></Alert></div>
+    else if (this.props.avState.state === "failed") {
+      avComponent = <div><Alert variant="danger"><p>{this.props.avState.reason ? this.props.avState.reason : "Call failed"}</p></Alert></div>
       actions = <ConversationHeader.Actions>
-                  <Button border onClick={() => this.setState({ voiceState: "none" })}>Close</Button>
+                  <Button border onClick={() => this.props.cancelCall()}>Close</Button>
                 </ConversationHeader.Actions>
     }
-    else if (this.state.voiceState === "streaming") {
-      avComponent = <audio ref={this.audioRef} controls volume="true" autoPlay />
+    else if (this.props.avState.state === "offering") {
+      avComponent = <div><Loader>Calling ...</Loader></div>
       actions = <ConversationHeader.Actions>
-                  <Button border onClick={() => this.setState({ voiceState: "none" })}>Hang up</Button>
+                  <Button border onClick={() => this.props.cancelCall()}>Cancel</Button>
                 </ConversationHeader.Actions>
     }
-
-    else if (this.state.videoState === "initiate") {
-      avComponent = <div><Loader>Starting video call</Loader><Button border onClick={() => this.setState({ videoState: "none" })}>Cancel</Button></div>
+    else if (this.props.avState.state === "offerReceived") {
+      avComponent = <div>{this.props.otherUserName + " is calling (" + this.props.avState.type + " call)"}</div>
       actions = <ConversationHeader.Actions>
-                  <Button border onClick={() => this.setState({ videoState: "none" })}>Cancel</Button>
+                  <Button border onClick={() => this.props.acceptCall()}>Accept</Button>
+                  <Button border onClick={() => this.props.rejectCall()}>Reject</Button>
                 </ConversationHeader.Actions>
     }
-    else if (this.state.videoState === "failed") {
-      avComponent = <div><Alert variant="danger" onClose={() => this.setState({ videoState: "none" })} dismissible><p>Video call failed</p></Alert></div>
-      actions = <ConversationHeader.Actions>
-                  <Button border onClick={() => this.setState({ videoState: "none" })}>Close</Button>
-                </ConversationHeader.Actions>
-    }
-    else if (this.state.videoState === "streaming") {
-      avComponent = <video ref={this.videoRef} controls volume="true" autoPlay />
+    // else if (this.state.voiceState === "streaming") {
+    //   avComponent = <audio ref={this.audioRef} controls volume="true" autoPlay />
+    //   actions = <ConversationHeader.Actions>
+    //               <Button border onClick={() => this.setState({ voiceState: "none" })}>Hang up</Button>
+    //             </ConversationHeader.Actions>
+    // }
+    else if (this.props.avState.state === "streaming") {
+      avComponent = <video ref={this.videoRef} style={{ height: "150px", width: "100%", position: "relative"}} controls volume="true" autoPlay />
       actions = <ConversationHeader.Actions>
                   <Button border onClick={() => this.setState({ videoState: "none" })}>Hang up</Button>
                 </ConversationHeader.Actions>
@@ -69,11 +67,11 @@ export class MessageList extends Component {
 
     return (
       <>
-        <div style={{ position: "relative", height: "500px" }}>
+        <div style={{ height: (this.props.userId.startsWith("e")) ? "100%" : "600px" , width: "100%" }}>
           <ChatContainer>
 
             <ConversationHeader>
-              <Avatar src={`/images/${this.props.otherUserId}.ico`} name={this.props.otherUserName} />
+              <Avatar src={`/images/${this.props.otherUserId}.ico`} name={this.props.otherUserName}  size="md"/>
               <ConversationHeader.Content userName={this.props.otherUserName} info="Active 10 mins ago" />
               {actions}
             </ConversationHeader>
@@ -91,7 +89,7 @@ export class MessageList extends Component {
                         //sentTime: "just now",
                         sender: this.props.userId,
                         direction: "outgoing",
-                      }}><Avatar src={("/images/" + message.from + ".ico")} name={message.from} /></Message>)
+                      }}><Avatar src={("/images/" + message.from + ".ico")} name={message.from}  size="md"/></Message>)
                   } else {
                     return (
                       <Message model={{
@@ -125,62 +123,25 @@ export class MessageList extends Component {
   }
 
   updateStream() {
-    if (this.state.stream && this.state.voiceState === "none" && this.state.videoState === "none")
+    if (this.props.avState.stream)
     {
-      const tracks = this.state.stream.getTracks();
-
-      tracks.forEach(function(track) {
-        track.stop();
-      });
-    }
-
-    if (this.videoRef.current !== null && this.videoRef.current.srcObject !== this.state.stream) {
-      this.videoRef.current.srcObject = this.state.stream
-    }
-    else if (this.audioRef.current !== null && this.audioRef.current.srcObject !== this.state.stream) {
-      this.audioRef.current.srcObject = this.state.stream
-    }
-  }
-
-  initiateVoiceCall() {
-    this.setState({ voiceState: "initiate" });
-    window.navigator.mediaDevices.getUserMedia(
+      if (this.props.avState.state === "none")
       {
-        audio: true,
-      },
-    ).then(stream => {
-      this.setState({
-        voiceState: "streaming",
-        stream: stream
-      });
-    }).catch(reason => {
-      console.log("voice failed: " + reason);
-      this.setState({
-        voiceState: "failed"
-      });
-    });
-  }
+        this.props.avState.stream.getTracks().forEach(function(track) {
+          track.stop();
+        });
+      }
 
-  initiateVideoCall() {
-    this.setState({ videoState: "initiate" });
-    window.navigator.mediaDevices.getUserMedia(
-      {
-        video: true,
-        audio: true,
-      },
-    ).then(stream => {
-      this.setState({
-        videoState: "streaming",
-        stream: stream
-      });
-    }).catch(reason => {
-      console.log("video failed: " + reason);
-      this.setState({
-        videoState: "failed"
-      });
-    });
+      if (this.videoRef.current !== null && this.videoRef.current.srcObject !== this.props.avState.stream) {
+        this.videoRef.current.srcObject = this.props.avState.stream
+      }
+      else if (this.audioRef.current !== null && this.audioRef.current.srcObject !== this.props.avState.stream) {
+        this.audioRef.current.srcObject = this.props.avState.stream
+      }
+    }
   }
 }
+
 
 export default MessageList
 

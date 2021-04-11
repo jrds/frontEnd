@@ -10,8 +10,8 @@ import CodeConsole from "./CodeConsole";
 import Button from 'react-bootstrap/Button';
 import HandRaise from '../components/HandRaise';
 
-function LearnerPage(props) {
 
+function LearnerPage(props) {
     
     if (props.lessonState === "NOT_STARTED")
     {
@@ -35,17 +35,17 @@ function LearnerPage(props) {
     {
       return (
         <Container>
-          <Row>
-            <Col>
+          <Row className = "instructions-row">
               <h2>Lesson started</h2>
-              { 
-                props.instructions.map(function(inst,idx) { 
+              { props.instructions.map(function(inst,idx) { 
                   return (<Instruction key={idx} instruction={inst}/>)
                 })
               }
-            </Col>
-            <Col>
-              <Row>
+          </Row>
+          
+          <Row>
+              <Col>
+                <Row>
                 <div className="top-pane">
                 <Editor 
                   language = "text/x-java" 
@@ -67,12 +67,24 @@ function LearnerPage(props) {
               <Row>
                 <CodeConsole consoleStrings={props.consoleStrings} sendExecutionInput={props.sendExecutionInput} />
               </Row>
+            
             </Col>
             <Col>
             <div className="message-pane">
                 <ChatToggleAndHeader/>
-                <MessageList handleSend = {value => props.sendLearnersChatMessage(value)} educatorId = {props.educatorId} chatMessages = {props.chatMessages} userId = {props.userId} otherUserId = {props.educatorId} otherUserName = {props.educatorName} /> {// TODO - think about how to seperate out the learners own message from the educators - how it wil work with formating etc.
-                }   // TODO  - could change educator to an obj with name and id, and pass that in.
+                <MessageList handleSend = {value => props.sendLearnersChatMessage(value)} 
+                             educatorId = {props.educatorId} 
+                             chatMessages = {props.chatMessages} 
+                             userId = {props.userId} 
+                             otherUserId = {props.educatorId} 
+                             otherUserName = {props.educatorName}
+                             avState = {props.avState}            
+                             acceptCall = {props.acceptCall}
+                             rejectCall = {props.rejectCall}
+                             /> 
+                   {/* TODO  - could change educator to an obj with name and id, and pass that in.
+                    * TODO - think about how to seperate out the learners own message from the educators - how it wil work with formating etc.
+                    */}
               </div>
             <div className="help-pane">  
                 <HandRaise openHelpRequest = {props.openHelpRequest} sendHelpRequest={props.sendHelpRequest} sendLearnerCancelsHelpRequest = {props.sendLearnerCancelsHelpRequest}/>
