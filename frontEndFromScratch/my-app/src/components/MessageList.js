@@ -61,7 +61,7 @@ export class MessageList extends Component {
     else if (this.props.avState.state === "streaming") {
       avComponent = <video ref={this.videoRef} style={{ height: "150px", width: "100%", position: "relative"}} controls volume="true" autoPlay />
       actions = <ConversationHeader.Actions>
-                  <Button border onClick={() => this.setState({ videoState: "none" })}>Hang up</Button>
+                  <Button border onClick={() => this.props.endCall()}>Hang up</Button>
                 </ConversationHeader.Actions>
     }
 

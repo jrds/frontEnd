@@ -50,6 +50,7 @@ export class GroupedMessages extends Component {
                                  avState = {this.props.avState}  
                                  startCall = {type => this.props.educatorStartCall(type, this.state.userSelected)}
                                  cancelCall = {this.props.cancelCall}
+                                 endCall = {this.props.endCall}
                                  />          
     } else {
       messageList = <ChatContainer />

@@ -110,6 +110,7 @@ function LearnerPage(props) {
                              avState = {props.avState}            
                              acceptCall = {props.acceptCall}
                              rejectCall = {props.rejectCall}
+                             endCall={props.endCall}
                              /> 
                    {/* TODO  - could change educator to an obj with name and id, and pass that in.
                     * TODO - think about how to seperate out the learners own message from the educators - how it wil work with formating etc.

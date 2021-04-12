@@ -73,6 +73,7 @@ class EducatorPage extends Component {
           avState = {this.props.avState}            
           educatorStartCall = {this.props.educatorStartCall}
           cancelCall = {this.props.cancelCall}
+          endCall = {this.props.endCall}
         />
       } else {
         sideDisplay = <OpenHelpRequests 

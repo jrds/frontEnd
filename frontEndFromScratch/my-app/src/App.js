@@ -185,6 +185,15 @@ class App extends Component {
           this.streamFailed("Call declined")
         }
       }
+
+      else if (msg._type === "AVClose"){
+        console.log("AVClose Message Receieved")
+        
+        this.state.avState.stream.getTracks().forEach(track => track.stop());
+
+        this.setState({ avState: { state: "none" } });
+      }
+
       else if (msg._type === "FailureResponse") {
         console.log("Failure Response received")
         console.log(msg.failureReason)
@@ -472,6 +481,50 @@ class App extends Component {
     this.setState({ avState: { state: "none" } });
   }
 
+  endCall = () => {
+
+    console.log("Ending call")
+
+    var peerConnection = this.state.avState.peerConnection;
+
+    if (peerConnection) {
+      peerConnection.ontrack = null;
+      peerConnection.onremovetrack = null;
+      peerConnection.onremovestream = null;
+      peerConnection.onicecandidate = null;
+      peerConnection.oniceconnectionstatechange = null;
+      peerConnection.onsignalingstatechange = null;
+      peerConnection.onicegatheringstatechange = null;
+      peerConnection.onnegotiationneeded = null;
+  
+     
+      this.state.avState.stream.getTracks().forEach(track => track.stop());
+      
+      peerConnection.close();
+      peerConnection = null;
+    }
+  
+    // remoteVideo.removeAttribute("src");
+    // remoteVideo.removeAttribute("srcObject");
+    // localVideo.removeAttribute("src");
+    // remoteVideo.removeAttribute("srcObject");
+  
+    //document.getElementById("hangup-button").disabled = true;
+    //targetUsername = null;
+
+    this.state.ws.send(JSON.stringify({
+      id: this.state.messageCounter,
+      from: this.state.userId,
+      to: this.state.avState.to,
+      type: this.state.avState.type,
+      _type: "AVClose"
+    }));
+
+    this.incrementMessageCounter();
+    this.setState({ avState: { state: "none" } });
+
+  }
+
   makeOffer = (stream) => {
     const peerConnection = this.createPeerConnection(stream);
 
@@ -573,6 +626,7 @@ class App extends Component {
           learnerStartCall={this.learnerStartCall}
           acceptCall={this.acceptCall}
           rejectCall={this.rejectCall}
+          endCall={this.endCall}
         />);
       }
       else if (this.state.role === "EDUCATOR") {
@@ -593,6 +647,7 @@ class App extends Component {
           avState={this.state.avState}
           educatorStartCall={this.educatorStartCall}
           cancelCall={this.cancelCall}
+          endCall={this.endCall}
         />);
       }
     }
