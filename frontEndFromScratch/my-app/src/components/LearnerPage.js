@@ -1,6 +1,6 @@
 import React from 'react';
 import {Container, Row, Col} from 'react-bootstrap';
-import Image from 'react-bootstrap/Image';
+import Image, { propTypes } from 'react-bootstrap/Image';
 import Spinner from 'react-bootstrap/Spinner';  
 import Editor from "../components/Editor";
 import Instruction from "./Instruction";
@@ -13,6 +13,22 @@ import HandRaise from '../components/HandRaise';
 
 function LearnerPage(props) {
     
+    var instructions;
+
+    if(props.instructions.length >0){
+      instructions = 
+        <>
+        <h2>Instructions:</h2>
+          <Button onClick = {handleClick3} size = "sm"> prev </Button>
+          <Instruction instruction = {props.instructions[props.instructionDisplayed-1]}/>
+          <Button onClick = {handleClick4} size = "sm">next</Button>
+        </>
+
+    } else {
+      instructions = <div>Instructions loading</div>
+    }
+
+
     if (props.lessonState === "NOT_STARTED")
     {
       return (
@@ -33,14 +49,15 @@ function LearnerPage(props) {
     }
     else 
     {
+      
+      console.log(props.instructions)
+      console.log(props.instructionDisplayed)
+      console.log(props.instructions[props.instructionDisplayed-1])
+
       return (
         <Container>
           <Row className = "instructions-row">
-              <h2>Lesson started</h2>
-              { props.instructions.map(function(inst,idx) { 
-                  return (<Instruction key={idx} instruction={inst}/>)
-                })
-              }
+              {instructions}
           </Row>
           
           <Row>
@@ -106,6 +123,18 @@ function handleClick(){
 function handleClick2(){
   props.sendTerminateExecutionRequest()
   console.log("Stop Code Execution Pressed");
+}
+
+function handleClick3(){
+  props.prevInstruction()
+  console.log("Previous Instruction Button Pressed");
+
+}
+
+function handleClick4(){
+  props.nextInstruction()
+  console.log("Next Instruction Button Pressed");
+
 }
 
 }

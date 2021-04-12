@@ -22,6 +22,8 @@ class App extends Component {
       loginError: "",
       userId: "",
       instructions: [],
+      instructionDisplayed: 1,
+      finishedAllInstructions: false,
       chatMessages: [],
       
       openHelpRequest: false,
@@ -38,7 +40,6 @@ class App extends Component {
       messageCounter: 4,
       helpRequestCounter: 10000,
       avState: {state:"none", offer:null},
-      dummyLearners: [{name: "Jordan", age:29}, {name: "BanBan", age:21}, {name: "Jack", age:29}]
     };
   }
   timeout = 250; // Initial timeout duration as a class variable
@@ -274,6 +275,33 @@ class App extends Component {
       messageCounter : this.state.messageCounter + 1
     });
   };
+
+  nextInstruction = () => {
+    if (this.state.instructionDisplayed === this.state.instructions.length){
+      this.setState({
+        finishedAllInstructions : true
+      })
+    } else {
+    this.setState({
+      instructionDisplayed: this.state.instructionDisplayed + 1
+    })
+  }}
+
+  prevInstruction = () => {
+    if (this.state.instructionDisplayed === this.state.instructions.length){
+      this.setState({
+        finishedAllInstructions : false,
+        instructionDisplayed: this.state.instructionDisplayed - 1
+      })
+    } else if (this.state.instructionDisplayed === 1) {
+        // do nothing 
+    } else {
+      this.setState({
+        instructionDisplayed: this.state.instructionDisplayed - 1
+      })
+    }
+  }
+
   sendLearnersChatMessage = (messageText) =>
   { 
     this.setState({ 
@@ -404,10 +432,7 @@ class App extends Component {
       const peerConnection = new RTCPeerConnection({
         iceServers: [{ urls: 'stun:stun.l.google.com:19302' }]
       });
-      peerConnection.ontrack = (event) => {
-        console.log("ontrack happened")
-        this.setState({avState: Object.assign({}, this.state.avState, {stream:event.streams[0]})});
-      };
+      
       stream.getTracks().forEach(track => peerConnection.addTrack(track, stream));
       peerConnection.setRemoteDescription(this.state.avState.offer)
       .then(() => peerConnection.createAnswer())
@@ -431,9 +456,16 @@ class App extends Component {
             answer: JSON.stringify(this.state.avState.answer), 
             _type: "AVAnswer"
           }));
+
+          
   
           this.incrementMessageCounter();
           this.setState({avState: Object.assign({}, this.state.avState, {state:"streaming"})});
+
+          peerConnection.ontrack = (event) => {
+            console.log("ontrack happened")
+            this.setState({avState: Object.assign({}, this.state.avState, {stream:event.streams[0]})});
+         };
 
         }
       })
@@ -499,7 +531,7 @@ class App extends Component {
     console.log(this.state.avState);
     this.state.avState.peerConnection.setRemoteDescription(this.state.avState.answer)
     .then(() => {
-      //this.setState({avState: Object.assign({}, this.state.avState, {state: "streaming"})});
+      //this.setState({avState: Object.assign({}, this.state.avState, {state: "streaming"})});
     })
     .catch(reason => this.streamFailed(reason))
   }
@@ -508,6 +540,7 @@ class App extends Component {
     console.log("video failed: " + text);
     this.setState({avState: Object.assign({}, this.state.avState, {state: "failed", reason: text})});
   }
+
   render() {
     if (this.state.loggedIn)
     {
@@ -515,6 +548,10 @@ class App extends Component {
         return (<LearnerPage 
             lessonState={this.state.lessonState} 
             instructions={this.state.instructions} 
+            instructionDisplayed = {this.state.instructionDisplayed}
+            nextInstruction = {this.nextInstruction}
+            prevInstruction = {this.prevInstruction}
+            finishedAllInstructions = {this.state.finishedAllInstructions}
             educatorId={this.state.educatorId} 
             educatorName={this.state.educatorName}
             userId = {this.state.userId} 
