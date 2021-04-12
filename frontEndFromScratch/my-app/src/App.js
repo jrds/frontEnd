@@ -13,7 +13,8 @@ class App extends Component {
       lessonId: "",
       educatorId: "",
       educatorName: "Prof", //TODO  - send name from server
-      role:"",
+      lessonName: "The Circle App", //TODO  - send name from server
+      role:"",
       lessonState: "NOT_STARTED",
       learners: [],
       detailsByLearner: new Map(),

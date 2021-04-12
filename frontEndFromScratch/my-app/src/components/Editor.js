@@ -17,18 +17,23 @@ export default function Editor(props) {
     function handleChange(editor, data, value){
         onChange(value)
     }
+    
+    const codemirrorRef = React.useRef();
 
+    React.useEffect(() => {
+    const current = codemirrorRef.current.editor.display.wrapper.style.height = "600px";
+    });
 
     return (
         <div className = "editor-containter">
             <div className = "editor-title">
                 {displayName}
-                <button>O/C</button>
             </div>
             <ControlledEditor
                 onBeforeChange={handleChange}
                 value={value}
                 className="code-mirror-wrapper"
+                ref={codemirrorRef}
                 options={{
                     lineWrapping: true,
                     lint: true,
@@ -37,6 +42,7 @@ export default function Editor(props) {
                     lineNumbers: true
                 }}
             />
+    
         </div>
     )
 }

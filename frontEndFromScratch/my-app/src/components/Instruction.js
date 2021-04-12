@@ -7,7 +7,7 @@ export class Instruction extends Component {
                 
         return (
             <div className="Instruction" >
-              <h3> {this.props.instruction.title} </h3>
+              <h4> {this.props.instruction.title} </h4>
                 {this.props.instruction.body.split("\n").map((lne, idx) => {
                     return (<div key={idx}>{lne}</div>)
                 })}

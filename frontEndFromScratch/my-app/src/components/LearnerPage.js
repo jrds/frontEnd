@@ -17,12 +17,26 @@ function LearnerPage(props) {
 
     if(props.instructions.length >0){
       instructions = 
-        <>
-        <h2>Instructions:</h2>
-          <Button onClick = {handleClick3} size = "sm"> prev </Button>
-          <Instruction instruction = {props.instructions[props.instructionDisplayed-1]}/>
-          <Button onClick = {handleClick4} size = "sm">next</Button>
-        </>
+        <div style = {{color:"#425f75", width: "100%", border: "2px solid #425f75", borderRadius: "5px", padding: "15px"}}>
+          <div>
+            <h2>Instructions:</h2>
+          </div>
+          <div>  
+            <div style = {{width: "100%", minHeight: "100px"}}>
+              <Instruction instruction = {props.instructions[props.instructionDisplayed-1]}/>
+            </div>
+            <div style = {{marginTop: "10px"}}>
+              <Button onClick = {handleClick3} size = "sm" style = {{backgroundColor: "#c6e3fa", color:"#425f75", border: "2px solid #425f75", borderRadius: "5px", float: "left"}}>
+                <i class="fas fa-arrow-left" style = {{marginRight: "15px"}}></i>
+                prev 
+              </Button>
+              <Button  onClick = {handleClick4} size = "sm" style = {{backgroundColor: "#c6e3fa", color:"#425f75", border: "2px solid #425f75", borderRadius: "5px", float: "right"}}>
+                  next
+                  <i class="fas fa-arrow-right" style = {{marginLeft: "15px"}}></i>
+              </Button>
+            </div>
+          </div>
+        </div>
 
     } else {
       instructions = <div>Instructions loading</div>
@@ -63,7 +77,7 @@ function LearnerPage(props) {
           <Row>
               <Col>
                 <Row>
-                <div className="top-pane">
+                <div className="top-pane" style = {{minWidth: "800px", minheight: "600px", padding: "10px"}} >
                 <Editor 
                   language = "text/x-java" 
                   displayName = "Java"
@@ -73,22 +87,23 @@ function LearnerPage(props) {
                 </div>
               </Row>
               <Row className = "code-button-row">
-                  <Button className = "run-code-button" variant="outline-success" onClick = {handleClick}><i class="fas fa-play"></i>
+                  <Button className = "run-code-button" variant="outline-success" onClick = {handleClick}><i class="fas fa-play" style = {{marginRight: "15px"}}></i>
                       Run Code
                   </Button>
         {/* TODO show last event time */}
-                  <Button className = "stop-code-button" variant="outline-danger" onClick = {handleClick2}><i class="fas fa-stop"></i>
+                  <Button className = "stop-code-button" variant="outline-danger" onClick = {handleClick2}><i class="fas fa-stop" style = {{marginRight: "15px"}}></i>
                       Stop Code Execution
                   </Button>
               </Row>
               <Row>
-                <CodeConsole consoleStrings={props.consoleStrings} sendExecutionInput={props.sendExecutionInput} />
+                <div style = {{width: "100%", padding: "10px"}}>
+                  <CodeConsole consoleStrings={props.consoleStrings} sendExecutionInput={props.sendExecutionInput} />
+                </div>
               </Row>
             
             </Col>
             <Col>
-            <div className="message-pane">
-                <ChatToggleAndHeader/>
+            <div className="message-pane" style = {{paddingTop: "30px"}}>
                 <MessageList handleSend = {value => props.sendLearnersChatMessage(value)} 
                              educatorId = {props.educatorId} 
                              chatMessages = {props.chatMessages} 
