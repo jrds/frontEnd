@@ -132,10 +132,10 @@ export class MessageList extends Component {
         });
       }
 
-      if (this.videoRef.current !== null && this.videoRef.current.srcObject !== this.props.avState.stream) {
+      if (this.videoRef.current !== null && this.props.avState.stream && !this.videoRef.current.srcObject ) {
         this.videoRef.current.srcObject = this.props.avState.stream
       }
-      else if (this.audioRef.current !== null && this.audioRef.current.srcObject !== this.props.avState.stream) {
+      else if (this.audioRef.current !== null && this.props.avState.stream && !this.audioRef.current.srcObject) {
         this.audioRef.current.srcObject = this.props.avState.stream
       }
     }
