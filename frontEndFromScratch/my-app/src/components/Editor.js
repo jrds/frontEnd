@@ -21,14 +21,16 @@ export default function Editor(props) {
     const codemirrorRef = React.useRef();
 
     React.useEffect(() => {
-    const current = codemirrorRef.current.editor.display.wrapper.style.height = "600px";
+        codemirrorRef.current.editor.display.wrapper.style.height = "600px";
+        codemirrorRef.current.editor.display.wrapper.style.borderRadius = "30px";
+        codemirrorRef.current.editor.display.wrapper.style.padding = "10px";
     });
 
     return (
         <div className = "editor-containter">
-            <div className = "editor-title">
+            <h5 className = "editor-title" style = {{paddingLeft: "20px"}}>
                 {displayName}
-            </div>
+            </h5>
             <ControlledEditor
                 onBeforeChange={handleChange}
                 value={value}

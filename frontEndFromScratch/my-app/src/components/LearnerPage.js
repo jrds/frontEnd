@@ -17,7 +17,7 @@ function LearnerPage(props) {
 
     if(props.instructions.length >0){
       instructions = 
-        <div style = {{color:"#425f75", width: "100%", border: "2px solid #425f75", borderRadius: "5px", padding: "15px"}}>
+        <div style = {{color:"#425f75", background: "#d1e2f0",width: "100%", border: "2px solid #425f75", borderRadius: "30px", padding: "15px"}}>
           <div>
             <h2>Instructions:</h2>
           </div>
@@ -26,11 +26,11 @@ function LearnerPage(props) {
               <Instruction instruction = {props.instructions[props.instructionDisplayed-1]}/>
             </div>
             <div style = {{marginTop: "10px"}}>
-              <Button onClick = {handleClick3} size = "sm" style = {{backgroundColor: "#c6e3fa", color:"#425f75", border: "2px solid #425f75", borderRadius: "5px", float: "left"}}>
+              <Button onClick = {handleClick3} size = "sm" style = {{backgroundColor: "white", color:"#425f75", border: "2px solid #425f75", borderRadius: "5px", float: "left"}}>
                 <i class="fas fa-arrow-left" style = {{marginRight: "15px"}}></i>
                 prev 
               </Button>
-              <Button  onClick = {handleClick4} size = "sm" style = {{backgroundColor: "#c6e3fa", color:"#425f75", border: "2px solid #425f75", borderRadius: "5px", float: "right"}}>
+              <Button  onClick = {handleClick4} size = "sm" style = {{backgroundColor: "white", color:"#425f75", border: "2px solid #425f75", borderRadius: "5px", float: "right"}}>
                   next
                   <i class="fas fa-arrow-right" style = {{marginLeft: "15px"}}></i>
               </Button>
@@ -63,10 +63,7 @@ function LearnerPage(props) {
     }
     else 
     {
-      
-      console.log(props.instructions)
-      console.log(props.instructionDisplayed)
-      console.log(props.instructions[props.instructionDisplayed-1])
+
 
       return (
         <Container>
@@ -75,7 +72,7 @@ function LearnerPage(props) {
           </Row>
           
           <Row>
-              <Col>
+              <Col style ={{background: "#f3f3f3", border: "3px solid #263238", borderRadius: "30px", marginLeft: "10px", marginTop: "20px"}}>
                 <Row>
                 <div className="top-pane" style = {{minWidth: "800px", minheight: "600px", padding: "10px"}} >
                 <Editor 
@@ -117,8 +114,9 @@ function LearnerPage(props) {
                    {/* TODO  - could change educator to an obj with name and id, and pass that in.
                     * TODO - think about how to seperate out the learners own message from the educators - how it wil work with formating etc.
                     */}
-              </div>
-            <div className="help-pane">  
+            </div>
+            <div className="help-pane" style = {{marginTop: "50px", background: "#fedcd6", height: "100px", border: "1px solid #e1a7ab", borderRadius: "30px", padding: "20px"}}>  
+                <div>Need help?</div>
                 <HandRaise openHelpRequest = {props.openHelpRequest} sendHelpRequest={props.sendHelpRequest} sendLearnerCancelsHelpRequest = {props.sendLearnerCancelsHelpRequest}/>
             </div>
             </Col>
