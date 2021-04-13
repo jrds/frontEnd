@@ -1,10 +1,9 @@
 import React from 'react';
 import {Container, Row, Col} from 'react-bootstrap';
-import Image, { propTypes } from 'react-bootstrap/Image';
+import Image from 'react-bootstrap/Image';
 import Spinner from 'react-bootstrap/Spinner';  
 import Editor from "../components/Editor";
 import Instruction from "./Instruction";
-import ChatToggleAndHeader from "../components/ChatToggleAndHeader";
 import MessageList from "../components/MessageList";
 import CodeConsole from "./CodeConsole";
 import Button from 'react-bootstrap/Button';
