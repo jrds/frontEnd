@@ -18,10 +18,12 @@ class EducatorPage extends Component {
       userSelected: '',
       showMessages: true,
       chatExpanded: false
+
     }
 
     this.selectUser = this.selectUser.bind(this);
     this.deSelectUser = this.deSelectUser.bind(this);
+    this.updateUserToHelp = this.updateUserToHelp.bind(this);
 
 }
 
@@ -80,6 +82,7 @@ class EducatorPage extends Component {
           openHelpRequests = {this.props.openHelpRequests} 
           sendUpdateHelpRequest = {this.props.sendUpdateHelpRequest} 
           sendEducatorCancelsHelpRequest = {this.props.sendEducatorCancelsHelpRequest}
+          updateUserToHelp = {this.updateUserToHelp}
         />
       }
 
@@ -132,6 +135,10 @@ class EducatorPage extends Component {
     this.setState ({
       userSelected: ''
     })
+  }
+
+  updateUserToHelp(userId){
+    this.selectUser(userId);
   }
 
 }
