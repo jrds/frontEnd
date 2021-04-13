@@ -84,23 +84,23 @@ function LearnerPage(props) {
                 </div>
               </Row>
               <Row className = "code-button-row">
-                  <Button className = "run-code-button" variant="outline-success" onClick = {handleClick}><i class="fas fa-play" style = {{marginRight: "15px"}}></i>
+                  <Button className = "run-code-button" variant="outline-success" onClick = {handleClick} style = {{marginLeft: "15px", borderRadius: "10px"}}><i class="fas fa-play" style = {{marginRight: "15px"}}></i>
                       Run Code
                   </Button>
-        {/* TODO show last event time */}
-                  <Button className = "stop-code-button" variant="outline-danger" onClick = {handleClick2}><i class="fas fa-stop" style = {{marginRight: "15px"}}></i>
+                                          {/* TODO show last event time */}
+                  <Button className = "stop-code-button" variant="outline-danger" onClick = {handleClick2} style = {{marginRight: "-15px", borderRadius: "10px"}}><i class="fas fa-stop" style = {{marginRight: "15px"}}></i>
                       Stop Code Execution
                   </Button>
               </Row>
               <Row>
-                <div style = {{width: "100%", padding: "10px"}}>
-                  <CodeConsole consoleStrings={props.consoleStrings} sendExecutionInput={props.sendExecutionInput} />
+                <div style = {{width: "100%", padding: "10px", marginBottom: "10px"}}>
+                  <CodeConsole consoleStrings={props.consoleStrings} sendExecutionInput={props.sendExecutionInput}/>
                 </div>
               </Row>
             
             </Col>
             <Col>
-            <div className="message-pane" style = {{paddingTop: "30px"}}>
+            <div className="message-pane" style = {{border: "2px solid #c6e3fa", borderRadius: "30px", marginTop: "20px", padding: "10px"}}>
                 <MessageList handleSend = {value => props.sendLearnersChatMessage(value)} 
                              educatorId = {props.educatorId} 
                              chatMessages = {props.chatMessages} 
@@ -116,10 +116,11 @@ function LearnerPage(props) {
                     * TODO - think about how to seperate out the learners own message from the educators - how it wil work with formating etc.
                     */}
             </div>
-            <div className="help-pane" style = {{marginTop: "50px", background: "#fedcd6", height: "100px", border: "1px solid #e1a7ab", borderRadius: "30px", padding: "20px"}}>  
-                <div>Need help?</div>
+            <center className="help-pane" style = {{ float: "bottom", marginTop: "50px", background: "#fedcd6", color: "#565656", minHeight: "150px", border: "1px solid #e1a7ab", borderRadius: "30px", padding: "20px"}}>  
+                <h4>Need help?</h4>
+                <p>Use the button below to let the instructor know. <br/> They'll get back to you once you're at the front of their help queue.</p>
                 <HandRaise openHelpRequest = {props.openHelpRequest} sendHelpRequest={props.sendHelpRequest} sendLearnerCancelsHelpRequest = {props.sendLearnerCancelsHelpRequest}/>
-            </div>
+            </center>
             </Col>
           </Row>
       </Container>

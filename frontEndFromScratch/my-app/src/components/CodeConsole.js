@@ -22,10 +22,11 @@ class CodeConsole extends Component{
 
   render(){
     return (
-      <div className = "console-content">
+      <div className = "console-content" style = {{borderRadius: "10px"}} >
+        <div style = {{ marginLeft : "10px", color: "#4b6972"}}>Code console:</div>
         {this.props.consoleStrings.map((str, idx) => {
           return (
-            <div className = {str.type} key={idx}>
+            <div className = {str.type} key={idx} style = {{ marginLeft : "10px"}}>
               {str.text}
             </div>  
           )
@@ -38,6 +39,7 @@ class CodeConsole extends Component{
                 type='text'
                 autoComplete='off'
                 onChange = {this.onChangeInput}
+                style = {{color: "#c3e88d"}}
               />
       </div>
         )
