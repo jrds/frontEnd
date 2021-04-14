@@ -24,6 +24,9 @@ class EducatorPage extends Component {
     this.deSelectUser = this.deSelectUser.bind(this);
     this.updateUserToHelp = this.updateUserToHelp.bind(this);
 
+
+    console.log("EducatorPage type is" + (typeof props.sendCodeToCompileMessage))
+
 }
 
   render() {
@@ -62,13 +65,18 @@ class EducatorPage extends Component {
             userId = {this.props.userId} 
             chatMessages = {this.props.chatMessages} 
             code = {this.props.eduCode.get(this.state.userSelected)} 
-            setCode = {code => this.props.setEduCode(code,this.state.userSelected)}  
+            setEduCode = {code => this.props.setEduCode(code,this.state.userSelected)}  
             avState = {this.props.avState}            
             acceptCall = {this.props.acceptCall}
             rejectCall = {this.props.rejectCall}
             endCall={this.props.endCall}
             educatorStartCall = {this.props.educatorStartCall}
             cancelCall = {this.props.cancelCall}
+            consoleStrings={this.props.consoleStrings} 
+            sendExecutionInput={this.props.sendExecutionInput}
+            sendEduCodeToCompileMessage = {this.props.sendEduCodeToCompileMessage}
+            updateEduCodeToCode = {() => this.props.updateEduCodeToCode(this.state.userSelected)}
+
           /> 
         }
 

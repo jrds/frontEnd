@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import ZoomInCodeEditor from './ZoomInCodeEditor';
-import ZoomInCodeConsole from './ZoomInCodeConsole';
 import Button from 'react-bootstrap/Button';
 import MessageList from './MessageList';
 
@@ -11,6 +10,9 @@ export class ZoomInOnLearner extends Component {
 
     render() {
     
+        console.log("ZoomInOnLearner type is" + (typeof this.props.sendCodeToCompileMessage))
+
+
     // TODO @ Educator level? (repeated code)
     const learners = this.props.chatMessages.reduce((learners, item) => {
 
@@ -36,11 +38,16 @@ export class ZoomInOnLearner extends Component {
         return (
             <div>
                 <Button size="sm" variant="outline-info" onClick = {this.props.deSelectUser}>Back</Button>
-                <ZoomInCodeEditor learnerObj = {this.props.learnerObj} myCode = {this.props.code} setMyCode = {this.props.setCode}/>    
-                <ZoomInCodeConsole
- 
-                    learnerObj = {this.props.learnerObj}  
-                /> 
+                <ZoomInCodeEditor 
+                    learnerObj = {this.props.learnerObj} 
+                    myCode = {this.props.code} 
+                    setEduCode = {this.props.setEduCode}
+                    consoleStrings={this.props.consoleStrings} 
+                    sendExecutionInput={this.props.sendExecutionInput}
+                    sendCodeToCompileMessage = {() => this.props.sendEduCodeToCompileMessage(this.props.userSelected)}
+                    updateEduCodeToCode = {this.props.updateEduCodeToCode}
+
+                    />    
                 <div className="message-pane" style = {{border: "2px solid #c6e3fa", borderRadius: "30px", marginTop: "20px", padding: "10px", height : "250px"}}>
                     <MessageList handleSend = {value => this.props.sendEducatorsChatMessage(value, this.props.userSelected)} 
                              userId = {this.props.userId} 

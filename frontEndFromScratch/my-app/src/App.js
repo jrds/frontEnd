@@ -270,8 +270,15 @@ class App extends Component {
   }
 
   setEduCode = (code, learnerId) => {
+    console.log("new code :" + code);
     this.setState({
-      eduCode: new Map(this.state.eduCode.set(learnerId, code)),
+      eduCode: new Map(this.state.eduCode.set(learnerId, code))
+    })
+  }
+
+  updateEduCodeToCode = (learnerId) => {
+    this.setState({
+      code: this.state.eduCode.get(learnerId)
     })
   }
 
@@ -365,13 +372,21 @@ class App extends Component {
   }
 
   sendCodeToCompileMessage = () => {
+    this.doSendCodeToCompileMessage(this.state.code);
+  }
+
+  sendEduCodeToCompileMessage = (learnerId) => {
+    this.doSendCodeToCompileMessage(this.state.eduCode.get(learnerId));
+  }
+
+  doSendCodeToCompileMessage = (code) => {
     this.setState({
       consoleStrings: []
     })
     this.state.ws.send(JSON.stringify({
       id: this.state.messageCounter,
       from: this.state.userId,
-      codeToExecute: this.state.code,
+      codeToExecute: code,
       _type: "ExecuteCodeRequest"
     }))
     this.incrementMessageCounter()
@@ -608,6 +623,10 @@ class App extends Component {
   }
 
   render() {
+
+    console.log("APP type is" + (typeof this.sendCodeToCompileMessage))
+
+
     if (this.state.loggedIn) {
       if (this.state.role === "LEARNER") {
         return (<LearnerPage
@@ -661,6 +680,10 @@ class App extends Component {
           endCall={this.endCall}
           eduCode = {this.state.eduCode} 
           setEduCode = {this.setEduCode}
+          consoleStrings={this.state.consoleStrings}
+          sendExecutionInput={this.sendExecutionInput}
+          sendEduCodeToCompileMessage={this.sendEduCodeToCompileMessage}
+          updateEduCodeToCode = {this.updateEduCodeToCode}
         />);
       }
     }

@@ -21,6 +21,7 @@ class CodeConsole extends Component{
   }  
 
   render(){
+
     return (
       <div className = "console-content" style = {{borderRadius: "10px"}} >
         <div style = {{ marginLeft : "10px", color: "#4b6972"}}>Code console:</div>
