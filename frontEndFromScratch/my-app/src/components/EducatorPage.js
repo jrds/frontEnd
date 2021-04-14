@@ -59,8 +59,19 @@ class EducatorPage extends Component {
             userSelected = {this.state.userSelected}
             learnerObj = {this.props.detailsByLearner.get(this.state.userSelected)}
             deSelectUser = {this.deSelectUser}
-          />
-      }
+            sendEducatorsChatMessage = {this.props.sendEducatorsChatMessage}
+            userId = {this.props.userId} 
+            chatMessages = {this.props.chatMessages} 
+            
+            avState = {this.props.avState}            
+            acceptCall = {this.props.acceptCall}
+            rejectCall = {this.props.rejectCall}
+            endCall={this.props.endCall}
+            educatorStartCall = {this.props.educatorStartCall}
+            cancelCall = {this.props.cancelCall}
+            endCall = {this.props.endCall}
+          /> 
+        }
 
       var sideDisplay;
 
