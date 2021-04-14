@@ -1,6 +1,7 @@
 import React from 'react';
 import "codemirror/lib/codemirror.css";
 import "codemirror/theme/material.css";
+import "codemirror/theme/base16-light.css";
 import "codemirror/mode/xml/xml";
 import "codemirror/mode/clike/clike";
 import { Controlled as ControlledEditor } from 'react-codemirror2';
@@ -11,7 +12,8 @@ export default function Editor(props) {
         language,
         displayName,
         value,
-        onChange
+        onChange,
+        theme,
     } = props
 
     function handleChange(editor, data, value){
@@ -21,7 +23,7 @@ export default function Editor(props) {
     const codemirrorRef = React.useRef();
 
     React.useEffect(() => {
-        codemirrorRef.current.editor.display.wrapper.style.height = "600px";
+        codemirrorRef.current.editor.display.wrapper.style.height = props.isEdu ? "300px" : "600px";
         codemirrorRef.current.editor.display.wrapper.style.borderRadius = "30px";
         codemirrorRef.current.editor.display.wrapper.style.padding = "10px";
     });
@@ -40,7 +42,7 @@ export default function Editor(props) {
                     lineWrapping: true,
                     lint: true,
                     mode: language,
-                    theme: "material",
+                    theme: theme,
                     lineNumbers: true
                 }}
             />

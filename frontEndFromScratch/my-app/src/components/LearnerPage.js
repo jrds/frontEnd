@@ -79,6 +79,8 @@ function LearnerPage(props) {
                   displayName = "Java"
                   value={props.code} 
                   onChange={props.setCode}
+                  theme = "material"
+                  isEdu = {false}
                 />
                 </div>
               </Row>

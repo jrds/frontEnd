@@ -61,14 +61,14 @@ class EducatorPage extends Component {
             sendEducatorsChatMessage = {this.props.sendEducatorsChatMessage}
             userId = {this.props.userId} 
             chatMessages = {this.props.chatMessages} 
-            
+            code = {this.props.eduCode.get(this.state.userSelected)} 
+            setCode = {code => this.props.setEduCode(code,this.state.userSelected)}  
             avState = {this.props.avState}            
             acceptCall = {this.props.acceptCall}
             rejectCall = {this.props.rejectCall}
             endCall={this.props.endCall}
             educatorStartCall = {this.props.educatorStartCall}
             cancelCall = {this.props.cancelCall}
-            endCall = {this.props.endCall}
           /> 
         }
 

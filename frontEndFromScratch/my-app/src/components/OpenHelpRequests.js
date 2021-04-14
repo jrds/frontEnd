@@ -7,7 +7,6 @@ import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 import Avatar from '@material-ui/core/Avatar';
 import Typography from '@material-ui/core/Typography';
-import Button from '@material-ui/core/Button';
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 import FiberNewIcon from '@material-ui/icons/FiberNew';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
@@ -100,7 +99,7 @@ class OpenHelpRequests extends React.Component {
           } else if (helpRequest.status === "IN_PROGRESS") {
             return (
 
-              <ListItem style={{ height: "100px", backgroundColor: "", borderBottom: "1px solid #dcdcdc" }} key={helpRequest.learnerId + helpRequest.timeReceived}> {/*className = "new-help-request"*/}
+              <ListItem style={{ height: "100px",  backgroundColor: this.state.selectedUser === helpRequest.learnerId ? "#f0f0f0" : "white", borderBottom: "1px solid #dcdcdc" }} key={helpRequest.learnerId + helpRequest.timeReceived}> {/*className = "new-help-request"*/}
 
                 <ListItemAvatar button onClick={() => this.selectUser(helpRequest.learnerId)}>
                   <Avatar alt={helpRequest.learnerName} src={`/images/${helpRequest.learnerId}.ico`} />

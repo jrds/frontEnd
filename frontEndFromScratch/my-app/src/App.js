@@ -33,6 +33,7 @@ class App extends Component {
       code: "",
       codeChanged: false,
       consoleStrings: [],
+      eduCode: new Map(), 
       timeLastCompiled: "",
       learnersLiveCode: new Map(),
 
@@ -130,6 +131,9 @@ class App extends Component {
               //help request
               //unreadmessages boolean //TODO
             })
+          }
+          if (!this.state.eduCode.has(l.id)){
+            this.state.eduCode.set(l.id, "")
           }
         });
         this.setState({
@@ -264,6 +268,13 @@ class App extends Component {
     });
     console.log(code);
   }
+
+  setEduCode = (code, learnerId) => {
+    this.setState({
+      eduCode: new Map(this.state.eduCode.set(learnerId, code)),
+    })
+  }
+
   sendLiveCodeMessage = () => {
     this.state.ws.send(JSON.stringify({
       id: this.state.messageCounter,
@@ -648,6 +659,8 @@ class App extends Component {
           educatorStartCall={this.educatorStartCall}
           cancelCall={this.cancelCall}
           endCall={this.endCall}
+          eduCode = {this.state.eduCode} 
+          setEduCode = {this.setEduCode}
         />);
       }
     }

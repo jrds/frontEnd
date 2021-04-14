@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
-import AboveThumbnailable from './AboveThumbnailable';
-import Thumbnailable from './Thumbnailable';
+import ZoomInCodeEditor from './ZoomInCodeEditor';
 import ZoomInCodeConsole from './ZoomInCodeConsole';
 import Button from 'react-bootstrap/Button';
 import MessageList from './MessageList';
@@ -37,13 +36,12 @@ export class ZoomInOnLearner extends Component {
         return (
             <div>
                 <Button size="sm" variant="outline-info" onClick = {this.props.deSelectUser}>Back</Button>
-                <AboveThumbnailable learnerObj = {this.props.learnerObj}/>
-                <Thumbnailable learnerObj = {this.props.learnerObj}/>    
+                <ZoomInCodeEditor learnerObj = {this.props.learnerObj} myCode = {this.props.code} setMyCode = {this.props.setCode}/>    
                 <ZoomInCodeConsole
  
                     learnerObj = {this.props.learnerObj}  
                 /> 
-                <div className="message-pane" style = {{border: "2px solid #c6e3fa", borderRadius: "30px", marginTop: "20px", padding: "10px"}}>
+                <div className="message-pane" style = {{border: "2px solid #c6e3fa", borderRadius: "30px", marginTop: "20px", padding: "10px", height : "250px"}}>
                     <MessageList handleSend = {value => this.props.sendEducatorsChatMessage(value, this.props.userSelected)} 
                              userId = {this.props.userId} 
                              chatMessages = {messages} 
@@ -57,9 +55,7 @@ export class ZoomInOnLearner extends Component {
                              endCall = {this.props.endCall}
                              /> 
                 </div>
-                 {/* could end up being left and right //TODO
-                    think about instructor to see execution of learners code. would mean having the console strings from the latest execution on the learner obj*/}
-                </div>
+            </div>
         )
     }
 }
