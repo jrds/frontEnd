@@ -18,7 +18,6 @@ class EducatorPage extends Component {
       userSelected: '',
       showMessages: true,
       chatExpanded: false
-
     }
 
     this.selectUser = this.selectUser.bind(this);
@@ -110,15 +109,16 @@ class EducatorPage extends Component {
                   <ToggleButton 
                     onClick = {() => this.setState({showMessages: false})} 
                     name = "helpRequestButton"
-                    variant = {this.state.showMessages ? "info" : "outline-info"} 
+                    variant = {this.state.showMessages ? "outline-info" : "info"} 
                     type = "radio"
+                    style = {{}}
                     >
                       Help Requests
                   </ToggleButton>
                   <ToggleButton 
                     onClick = {() => this.setState({showMessages: true})} 
                     name = "messageButton"
-                    variant = {this.state.showMessages ? "outline-info" : "info"} 
+                    variant = {this.state.showMessages ? "info" : "outline-info"} 
                     type = "radio"
                     >
                       Messages

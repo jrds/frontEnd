@@ -8,6 +8,8 @@ import MessageList from './MessageList';
 
 export class ZoomInOnLearner extends Component {
     
+    
+
     render() {
     
     // TODO @ Educator level? (repeated code)
@@ -29,7 +31,6 @@ export class ZoomInOnLearner extends Component {
   
       var messages = [];
       messageGroups.filter(item => item.id === this.props.userSelected).forEach(item => messages = item.messages);
-  
   
 
     

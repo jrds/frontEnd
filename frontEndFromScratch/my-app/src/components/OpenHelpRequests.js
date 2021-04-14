@@ -15,6 +15,14 @@ import ListItemIcon from '@material-ui/core/ListItemIcon';
 
 class OpenHelpRequests extends React.Component {
 
+  constructor(props){
+    super(props)
+
+    this.state = {
+      selectedUser: ''
+    }
+  }
+
   changeStatusToInProgress(learnerId) {
     this.props.sendUpdateHelpRequest(learnerId, "IN_PROGRESS")
     console.log("Status changed to in progress");
@@ -27,22 +35,29 @@ class OpenHelpRequests extends React.Component {
 
   selectUser(learnerId) {
     this.props.updateUserToHelp(learnerId)
-    console.log()
+    this.setState({
+      selectedUser: learnerId
+    })
+
   }
+
+  
 
   render() {
 
-    var reOrderedHelpReqs = this.props.openHelpRequests.reverse(); 
+    var helprequests = this.props.openHelpRequests;
+
+    //var reOrderedHelpReqs = this.props.openHelpRequests.reverse(); 
     //TODO - change how the map is ordered instead 
 
     return (
-      <List className="open-help-requests" style={{ width: "100%", maxWidth: "46ch", backgroundColor: "white" }}>
-        {reOrderedHelpReqs.map(helpRequest => {
+      <List component = "ol" className="open-help-requests" style={{ width: "100%", maxWidth: "46ch", backgroundColor: "white" }}>
+        {helprequests.slice(0).reverse().map(helpRequest => {
 
           if (helpRequest.status === "NEW") {
             return (
 
-              <ListItem style={{ height: "100px", backgroundColor: "", borderBottom: "1px solid #dcdcdc" }} key={helpRequest.learnerId + helpRequest.timeReceived}> {/*className = "new-help-request"*/}
+              <ListItem style={{ height: "100px", backgroundColor: this.state.selectedUser === helpRequest.learnerId ? "#f0f0f0" : "white", borderBottom: "1px solid #dcdcdc" }} key={helpRequest.learnerId + helpRequest.timeReceived}> {/*className = "new-help-request"*/}
 
                 <ListItemAvatar button onClick={() => this.selectUser(helpRequest.learnerId)}>
                   <Avatar alt={helpRequest.learnerName} src={`/images/${helpRequest.learnerId}.ico`} />
