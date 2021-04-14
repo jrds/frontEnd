@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import AboveThumbnailable from './AboveThumbnailable';
 import Thumbnailable from './Thumbnailable';
-import BelowThumbNailable from './BelowThumbNailable';
+import ZoomInCodeConsole from './ZoomInCodeConsole';
 import Button from 'react-bootstrap/Button';
 import MessageList from './MessageList';
 
@@ -38,6 +38,10 @@ export class ZoomInOnLearner extends Component {
                 <Button size="sm" variant="outline-info" onClick = {this.props.deSelectUser}>Back</Button>
                 <AboveThumbnailable learnerObj = {this.props.learnerObj}/>
                 <Thumbnailable learnerObj = {this.props.learnerObj}/>    
+                <ZoomInCodeConsole
+ 
+                    learnerObj = {this.props.learnerObj}  
+                /> 
                 <div className="message-pane" style = {{border: "2px solid #c6e3fa", borderRadius: "30px", marginTop: "20px", padding: "10px"}}>
                     <MessageList handleSend = {value => this.props.sendEducatorsChatMessage(value, this.props.userSelected)} 
                              userId = {this.props.userId} 
@@ -52,9 +56,7 @@ export class ZoomInOnLearner extends Component {
                              endCall = {this.props.endCall}
                              /> 
                 </div>
-                <BelowThumbNailable 
-                    learnerObj = {this.props.learnerObj}  
-                />  {/* could end up being left and right //TODO
+                 {/* could end up being left and right //TODO
                     think about instructor to see execution of learners code. would mean having the console strings from the latest execution on the learner obj*/}
                 </div>
         )

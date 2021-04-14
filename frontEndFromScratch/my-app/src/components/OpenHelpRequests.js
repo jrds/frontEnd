@@ -31,9 +31,13 @@ class OpenHelpRequests extends React.Component {
   }
 
   render() {
+
+    var reOrderedHelpReqs = this.props.openHelpRequests.reverse(); 
+    //TODO - change how the map is ordered instead 
+
     return (
       <List className="open-help-requests" style={{ width: "100%", maxWidth: "46ch", backgroundColor: "white" }}>
-        {this.props.openHelpRequests.map(helpRequest => {
+        {reOrderedHelpReqs.map(helpRequest => {
 
           if (helpRequest.status === "NEW") {
             return (
