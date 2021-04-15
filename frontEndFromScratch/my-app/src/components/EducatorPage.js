@@ -76,6 +76,8 @@ class EducatorPage extends Component {
             sendExecutionInput={this.props.sendExecutionInput}
             sendEduCodeToCompileMessage = {this.props.sendEduCodeToCompileMessage}
             updateEduCodeToCode = {() => this.props.updateEduCodeToCode(this.state.userSelected)}
+            sendTerminateExecutionRequest = {this.props.sendTerminateExecutionRequest}
+
 
           /> 
         }

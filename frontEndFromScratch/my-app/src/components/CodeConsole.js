@@ -6,19 +6,11 @@ class CodeConsole extends Component{
 
   constructor(props) {
     super(props);
-    this.onChangeInput = this.onChangeInput.bind(this);
 
     this.state = {
         input: '',
     }
   }
-
-
-  onChangeInput(e) {
-      this.setState({
-        input: e.target.value + "\n"
-      })
-  }  
 
   render(){
 
@@ -35,11 +27,12 @@ class CodeConsole extends Component{
         <input
                 className="console-input"
                 onKeyDown={ event => {if (event.key === 'Enter') {
-                  event.preventDefault()
-                  this.props.sendExecutionInput(this.state.input)}}}
+                    event.preventDefault()
+                    this.props.sendExecutionInput(event.target.value + '\n')
+                    event.target.value = ''
+                  }}}
                 type='text'
                 autoComplete='off'
-                onChange = {this.onChangeInput}
                 style = {{color: "#c3e88d"}}
               />
       </div>

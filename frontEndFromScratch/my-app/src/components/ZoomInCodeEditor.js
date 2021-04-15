@@ -23,6 +23,8 @@ export class ZoomInCodeEditor extends Component {
         this.handleClick2 = this.handleClick2.bind(this);
         this.handleClick3 = this.handleClick3.bind(this);
 
+        this.state = {active:'learnerCode'}
+
     }    
     
     render() {
@@ -58,9 +60,10 @@ export class ZoomInCodeEditor extends Component {
                 </div>
         }
 
-    
+        console.log('rendering code as ' + this.props.myCode);
+
         return(
-            <Tabs defaultActiveKey="learnerCode" id="uncontrolled-tab-example">
+            <Tabs activeKey={this.state.active} onSelect={k => this.setState({active: k})}  id="uncontrolled-tab-example">
             <Tab eventKey="learnerCode" title="learnerCode">
                {learnerCodeEditor}
                

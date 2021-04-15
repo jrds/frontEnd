@@ -45,6 +45,7 @@ export class ZoomInOnLearner extends Component {
                     consoleStrings={this.props.consoleStrings} 
                     sendExecutionInput={this.props.sendExecutionInput}
                     sendCodeToCompileMessage = {() => this.props.sendEduCodeToCompileMessage(this.props.userSelected)}
+                    sendTerminateExecutionRequest = {this.props.sendTerminateExecutionRequest}
                     updateEduCodeToCode = {this.props.updateEduCodeToCode}
 
                     />    

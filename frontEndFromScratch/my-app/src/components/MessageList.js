@@ -46,10 +46,12 @@ export class MessageList extends Component {
                 </ConversationHeader.Actions>
     }
     else if (this.props.avState.state === "offerReceived") {
-      avComponent = <div>{this.props.otherUserName + " is calling (" + this.props.avState.type + " call)"}</div>
+      avComponent = <div>
+                      {this.props.otherUserName + " is calling (" + this.props.avState.type + " call)"}
+                      <Button border onClick={() => this.props.acceptCall()}>Accept</Button>
+                      <Button border onClick={() => this.props.rejectCall()}>Reject</Button>
+                    </div>
       actions = <ConversationHeader.Actions>
-                  <Button border onClick={() => this.props.acceptCall()}>Accept</Button>
-                  <Button border onClick={() => this.props.rejectCall()}>Reject</Button>
                 </ConversationHeader.Actions>
     }
     // else if (this.state.voiceState === "streaming") {
@@ -80,7 +82,7 @@ export class MessageList extends Component {
             <ChatScopeMessageList>
               <ChatScopeMessageList.Content>
                 {avComponent}
-
+                <div style = {{overflow: "auto"}}>
                 {this.props.chatMessages.map(message => {
                   if (message.from === this.props.userId) {
                     return (
@@ -99,9 +101,9 @@ export class MessageList extends Component {
                         direction: "incoming"
                       }}><Avatar src={("/images/" + message.from + ".ico")} name={message.from} /></Message>)
                   }
-
                 })
                 }
+                </div>
               </ChatScopeMessageList.Content>
             </ChatScopeMessageList>
             <MessageInput

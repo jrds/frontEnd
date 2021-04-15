@@ -46,13 +46,13 @@ function LearnerPage(props) {
     {
       return (
         <Container>
-          <Row>
+          <Row style = {{marginTop: "30px"}}>
             <Col>
             <Image src="/images/StudentLessonLoadingPic.jpg" fluid/>
             </Col>
             <Col>
-              <h1>Welcome LEARNER, your lesson hasn't started yet</h1>
-              <Spinner animation="border" role="status" variant="info">
+              <h1 style = {{margin: "40px"}}>Welcome, your lesson hasn't started yet</h1>
+              <Spinner style = {{marginLeft: "40px"}} animation="border" role="status" variant="info">
                 <span className="sr-only">Loading...</span>
             </Spinner>
             </Col>

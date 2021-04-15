@@ -50,7 +50,7 @@ class OpenHelpRequests extends React.Component {
     //TODO - change how the map is ordered instead 
 
     return (
-      <List component = "ol" className="open-help-requests" style={{ width: "100%", maxWidth: "46ch", backgroundColor: "white" }}>
+      <List component = "ol" className="open-help-requests" style={{ width: "100%", backgroundColor: "white" }}>
         {helprequests.slice(0).reverse().map(helpRequest => {
 
           if (helpRequest.status === "NEW") {

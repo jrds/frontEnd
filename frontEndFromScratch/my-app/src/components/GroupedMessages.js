@@ -47,7 +47,7 @@ export class GroupedMessages extends Component {
                                  userId = {this.props.educatorId} 
                                  otherUserId = {this.state.userSelected} 
                                  otherUserName = {this.state.userSelectedName}
-                                 avState = {this.props.avState}  
+                                 avState = {this.props.avState}
                                  startCall = {type => this.props.educatorStartCall(type, this.state.userSelected)}
                                  cancelCall = {this.props.cancelCall}
                                  endCall = {this.props.endCall}
@@ -87,7 +87,7 @@ export class GroupedMessages extends Component {
                       }
                 </ConversationList>
             </Sidebar>
-            <div>
+            <div style = {{width: "100%"}}>
               {messageList}
             </div>
 

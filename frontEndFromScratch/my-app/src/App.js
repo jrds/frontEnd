@@ -193,7 +193,10 @@ class App extends Component {
       else if (msg._type === "AVClose"){
         console.log("AVClose Message Receieved")
         
-        this.state.avState.stream.getTracks().forEach(track => track.stop());
+        if (this.state.myStream)
+        {
+          this.state.myStream.getTracks().forEach(track => track.stop());
+        }
 
         this.setState({ avState: { state: "none" } });
       }
@@ -451,7 +454,10 @@ class App extends Component {
   startStreams = (callback) => {
     var streams = this.state.avState.type === "audio" ? { audio: true } : { video: true, audio: true };
     window.navigator.mediaDevices.getUserMedia(streams)
-      .then(stream => callback(stream))
+      .then(stream => {
+        this.setState({myStream:stream});
+        callback(stream)
+      })
       .catch(reason => this.streamFailed(reason))
   }
 
@@ -522,10 +528,12 @@ class App extends Component {
       peerConnection.onsignalingstatechange = null;
       peerConnection.onicegatheringstatechange = null;
       peerConnection.onnegotiationneeded = null;
-  
-     
-      this.state.avState.stream.getTracks().forEach(track => track.stop());
-      
+       
+      if (this.state.myStream)
+      {
+        this.state.myStream.getTracks().forEach(track => track.stop());
+      }
+    
       peerConnection.close();
       peerConnection = null;
     }
@@ -619,7 +627,11 @@ class App extends Component {
   streamFailed = (reason) => {
     var text = typeof reason === "string" ? reason : reason.toString();
     console.log("video failed: " + text);
-    this.setState({ avState: Object.assign({}, this.state.avState, { state: "failed", reason: text }) });
+    if (this.state.myStream)
+    {
+      this.state.myStream.getTracks().forEach(track => track.stop());
+    }
+this.setState({ avState: Object.assign({}, this.state.avState, { state: "failed", reason: text }) });
   }
 
   render() {
@@ -683,7 +695,9 @@ class App extends Component {
           consoleStrings={this.state.consoleStrings}
           sendExecutionInput={this.sendExecutionInput}
           sendEduCodeToCompileMessage={this.sendEduCodeToCompileMessage}
-          updateEduCodeToCode = {this.updateEduCodeToCode}
+          updateEduCodeToCode = {this.updateEduCodeToCode}          
+          sendTerminateExecutionRequest={this.sendTerminateExecutionRequest}
+
         />);
       }
     }

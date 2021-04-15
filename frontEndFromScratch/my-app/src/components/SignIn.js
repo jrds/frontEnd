@@ -37,7 +37,7 @@ export default class SignIn extends Component {
 
     render() {
         return (
-            <div>
+            <div style = {{marginTop: "30px"}}>
                 <form onSubmit={this.onSubmit}>
                     <div>
                         <label>UserName: </label>
@@ -61,9 +61,9 @@ export default class SignIn extends Component {
                     <br/>
                     <label>{this.props.loginError}</label>
                     <br />
-                    <div className="form-group">
+                    <center className="form-group">
                         <input type="submit" value="Connect to Lesson"/>
-                    </div>
+                    </center>
                 </form>
             </div>
         )

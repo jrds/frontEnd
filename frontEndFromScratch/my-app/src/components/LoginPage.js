@@ -8,7 +8,7 @@ class LoginPage extends Component {
   render() {
     return (
       <Container>
-        <Row>
+        <Row style = {{marginTop: "50px"}}>
           <Col>
             <Welcome/>
           </Col>

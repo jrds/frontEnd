@@ -11,11 +11,19 @@ class StartNextLesson extends Component {
 
     render() { 
         return (
-            <div>
+            <div style= {{
+                marginTop: "30px"}}>
                 <Image className = "start-next-lesson-img" src="/images/educatorLessonPic.jpg"/>
                 <h1> YOUR NEXT LESSON</h1>
                 <p>CD4101 - Intro to Java - Lesson 2/12</p>
-                <button onClick={this.handleClick}> 
+                <button style= {{
+                    backgroundColor: "#dde4f6",
+                    borderRadius: "10px",
+                    height: "45px",
+                    width: "121px",
+                    border: "1px solid #bbbfe2",
+                    marginLeft: "122px",
+                    marginTop: "7px",}} onClick={this.handleClick}> 
                     Start Lesson 
                 </button>
             </div>
