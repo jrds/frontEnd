@@ -1,4 +1,5 @@
 const fs = require('fs');
+//import * as fs from 'fs';
 
 module.exports = {
     devServer(configFunction) {

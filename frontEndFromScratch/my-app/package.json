@@ -1,7 +1,6 @@
 {
   "name": "my-app",
   "version": "0.1.0",
-  "type": "module",
   "private": true,
   "dependencies": {
     "@chatscope/chat-ui-kit-react": "^1.5.1",
