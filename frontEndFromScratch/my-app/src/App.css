@@ -59,6 +59,10 @@
   color: #c3e88d;
   }
 
+.console-content .invalidClass {
+  color: #f17109;
+}
+
 .console-input{
   color:white;
   background-color: #263238;

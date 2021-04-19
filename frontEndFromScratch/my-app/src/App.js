@@ -5,6 +5,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import LearnerPage from './components/LearnerPage';
 import EducatorPage from './components/EducatorPage';
 
+
 class App extends Component {
   constructor(props) {
     super(props);
@@ -200,10 +201,16 @@ class App extends Component {
 
         this.setState({ avState: { state: "none" } });
       }
-
       else if (msg._type === "FailureResponse") {
         console.log("Failure Response received")
         console.log(msg.failureReason)
+        if (msg.failureReason === "Not a valid class definition"){
+          //TODO
+          this.setState({
+            consoleStrings: [{type: "invalidClass", text: "****** NOT A VALID CLASS DEFINITION ******"}]
+          })
+          
+        }
       }
       else if (msg._type === "SuccessResponse") {
         console.log("Success Response Recieved for message id: " + msg.id)
